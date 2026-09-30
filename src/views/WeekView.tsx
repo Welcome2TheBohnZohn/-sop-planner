@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Icon } from '../components/Icon'
 import { QuickAdd } from '../components/QuickAdd'
+import { Modal } from '../components/Modal'
 import { usePlanner } from '../state/PlannerContext'
 import { blankWeek } from '../state/defaults'
-import type { PlanEvent, ScheduleSeed, WeekPlan } from '../types'
+import type { PlanEvent, ScheduleSeed, WeekPlan, WeekTask } from '../types'
 import { addDays, formatDay, minutes, startOfWeek, toTime } from '../utils/date'
 
 const START_MIN=6*60, END_MIN=22*60
@@ -14,6 +15,7 @@ export function WeekView({ openSchedule }: { openSchedule: (seed: ScheduleSeed) 
   const { state, mutate, nextId } = usePlanner()
   const [tab,setTab]=useState<'mission'|'schedule'|'aar'>('schedule')
   const [interval,setInterval]=useState<15|30>(30)
+  const [editingTray,setEditingTray]=useState<WeekTask|null>(null)
   const weekKey=startOfWeek(state.selectedDate)
   const plan=state.weekPlans[weekKey]??blankWeek()
   const days=Array.from({length:7},(_,i)=>addDays(weekKey,i))
@@ -29,6 +31,17 @@ export function WeekView({ openSchedule }: { openSchedule: (seed: ScheduleSeed) 
     mutate(action,detail,d=>{const p=d.weekPlans[weekKey]??blankWeek();d.weekPlans[weekKey]=p;fn(p)})
   }
   function addTray(title:string){patch(p=>p.tray.push({id:nextId('W'),title,estimateMin:30,domain:'',inboxId:null}),'Weekly task added',title)}
+  function saveTrayTask(){
+    if(!editingTray)return
+    patch(p=>{const i=p.tray.findIndex(t=>t.id===editingTray.id);if(i>=0)p.tray[i]=editingTray},'Weekly task updated',editingTray.title)
+    setEditingTray(null)
+  }
+  function deleteTrayTask(){
+    if(!editingTray)return
+    const item=editingTray
+    patch(p=>{p.tray=p.tray.filter(t=>t.id!==item.id)},'Weekly task deleted',item.title)
+    setEditingTray(null)
+  }
   function updateTop3(i:number,value:string){patch(p=>{p.top3[i]=value})}
   function toggleClosed(){patch(p=>{p.closed=!p.closed},plan.closed?'Week reopened':'Week closed',weekKey,true)}
   function saveTemplate(){
@@ -100,14 +113,18 @@ export function WeekView({ openSchedule }: { openSchedule: (seed: ScheduleSeed) 
 
     {tab==='schedule'&&<>
       <section className="capacity-strip panel"><div><span className="eyebrow">Capacity</span><strong>{Math.round((fixedMinutes+trayMinutes)/60*10)/10}h planned / <input className="capacity-number" disabled={plan.closed} type="number" min="1" max="168" value={plan.availableHours} onChange={e=>patch(p=>{p.availableHours=Math.max(1,Number(e.target.value)||40)})}/>h available</strong></div><div className="capacity-track"><span style={{width:`${Math.min(100,load)}%`}} className={load>100?'over':load>85?'tight':''}></span></div><span className="capacity-label">{load>100?'Over capacity':load>85?'Tight':'Healthy buffer'}</span><div className="segmented interval-control"><button className={interval===30?'active':''} onClick={()=>setInterval(30)}>30 MIN</button><button className={interval===15?'active':''} onClick={()=>setInterval(15)}>15 MIN</button></div></section>
-      <div className="week-schedule-layout"><aside className="panel week-tray"><div className="section-head compact"><div><div className="eyebrow">This Week</div><h2>Unscheduled</h2></div><span className="count-badge">{plan.tray.length}</span></div>{plan.closed?<div className="hint-line">Reopen this week to add or schedule work.</div>:<QuickAdd placeholder="Add a weekly task…" buttonLabel="Add" onAdd={addTray}/>} {plan.tray.map(t=><div className="tray-task" key={t.id}><div><strong>{t.title}</strong><small>{t.estimateMin} min</small></div><button disabled={plan.closed} className="icon-button subtle" onClick={()=>openSchedule({date:weekKey,time:'09:00',title:t.title,type:'Task',source:{kind:'tray',id:t.id,weekKey}})} aria-label="Schedule"><Icon name="calendar"/></button></div>)}</aside>
+      <div className="week-schedule-layout"><aside className="panel week-tray"><div className="section-head compact"><div><div className="eyebrow">This Week</div><h2>Unscheduled</h2></div><span className="count-badge">{plan.tray.length}</span></div>{plan.closed?<div className="hint-line">Reopen this week to add or schedule work.</div>:<QuickAdd placeholder="Add a weekly task…" buttonLabel="Add" onAdd={addTray}/>} {plan.tray.map(t=><div className="tray-task" key={t.id}><button className="tray-task-copy" disabled={plan.closed} onClick={()=>setEditingTray(structuredClone(t))}><strong>{t.title}</strong><small>{t.estimateMin} min{t.domain?' · '+t.domain:''}</small></button><button disabled={plan.closed} className="icon-button subtle" onClick={()=>openSchedule({date:weekKey,time:'09:00',title:t.title,type:'Task',source:{kind:'tray',id:t.id,weekKey}})} aria-label="Schedule"><Icon name="calendar"/></button></div>)}</aside>
         <section className="panel week-calendar-shell">
           <div className="week-day-head"><div className="time-head"></div>{days.map(d=><button key={d} className={d===state.selectedDate?'current':''} onClick={()=>mutate('Date selected',d,x=>{x.selectedDate=d})}><strong>{formatDay(d,{weekday:'short'}).toUpperCase()}</strong><span>{formatDay(d,{month:'short',day:'numeric'})}</span></button>)}</div>
           <div className="week-all-day"><div className="all-day-label">ALL DAY</div>{days.map(d=><div className="week-all-day-cell" key={d}>{allDayEvents.filter(e=>e.date===d).map(e=><button key={e.id} onClick={()=>!plan.closed&&openSchedule({eventId:e.id,date:e.date,title:e.title,type:e.type,allDay:true})}>{e.title}</button>)}</div>)}</div>
-          <div className="week-timeline-wrap"><div className="time-axis">{Array.from({length:(END_MIN-START_MIN)/60},(_,i)=><div style={{height:rowH*(60/interval)}} key={i}>{toTime(START_MIN+i*60)}</div>)}</div><div className="week-canvas" ref={canvasRef} style={{height:slotsPerDay*rowH,backgroundSize:`100% ${rowH}px, calc(100% / 7) 100%`}}>{Array.from({length:7*slotsPerDay},(_,i)=>{const day=Math.floor(i/slotsPerDay),slot=i%slotsPerDay,date=days[day],time=toTime(START_MIN+slot*interval);return <button disabled={plan.closed} key={i} className="week-slot" style={{left:`${day/7*100}%`,top:slot*rowH,width:`${100/7}%`,height:rowH}} onClick={()=>openSchedule({date,time,type:'Task'})} aria-label={`Add ${date} ${time}`}></button>})}{timedEvents.map(ev=>{const dayIndex=days.indexOf(ev.date);const top=(minutes(ev.start)-START_MIN)/interval*rowH;const height=Math.max(rowH-2,(minutes(ev.end)-minutes(ev.start))/interval*rowH-2);return <button key={ev.id} className={`week-event type-${ev.type.toLowerCase().replaceAll(' ','-')}`} style={{left:`calc(${dayIndex/7*100}% + 3px)`,width:`calc(${100/7}% - 6px)`,top,height}} onPointerDown={e=>pointerDown(e,ev)} onPointerMove={pointerMove} onPointerUp={pointerUp}><span>{ev.start}</span><strong>{ev.title}</strong></button>})}</div></div>
+          <div className="week-timeline-wrap"><div className="time-axis">{Array.from({length:(END_MIN-START_MIN)/60},(_,i)=><div style={{height:rowH*(60/interval)}} key={i}>{toTime(START_MIN+i*60)}</div>)}</div><div className="week-canvas" ref={canvasRef} style={{height:slotsPerDay*rowH,backgroundSize:`100% ${rowH}px, calc(100% / 7) 100%`}}>{Array.from({length:7*slotsPerDay},(_,i)=>{const day=Math.floor(i/slotsPerDay),slot=i%slotsPerDay,date=days[day],time=toTime(START_MIN+slot*interval);return <button disabled={plan.closed} key={i} className="week-slot" style={{left:`${day/7*100}%`,top:slot*rowH,width:`${100/7}%`,height:rowH}} onClick={()=>openSchedule({date,time,type:'Task'})} aria-label={`Add ${date} ${time}`}></button>})}{timedEvents.map(ev=>{const dayIndex=days.indexOf(ev.date);const top=(minutes(ev.start)-START_MIN)/interval*rowH;const height=Math.max(rowH-2,(minutes(ev.end)-minutes(ev.start))/interval*rowH-2);return <button key={ev.id} className={'week-event type-'+ev.type.toLowerCase().replaceAll(' ','-')+(ev.completed?' completed':'')} style={{left:`calc(${dayIndex/7*100}% + 3px)`,width:`calc(${100/7}% - 6px)`,top,height}} onPointerDown={e=>pointerDown(e,ev)} onPointerMove={pointerMove} onPointerUp={pointerUp}><span>{ev.start}</span><strong>{ev.title}</strong></button>})}</div></div>
         </section>
       </div>
     </>}
+
+    <Modal open={!!editingTray} title="Edit weekly task" eyebrow="This Week / Unscheduled" onClose={()=>setEditingTray(null)} footer={<>{editingTray&&<button className="button danger" onClick={deleteTrayTask}><Icon name="trash"/>Delete</button>}<div className="spacer"/><button className="button" onClick={()=>setEditingTray(null)}>Cancel</button><button className="button primary" onClick={saveTrayTask}><Icon name="save"/>Save task</button></>}>
+      {editingTray&&<div className="form-stack"><label>Task<input autoFocus value={editingTray.title} onChange={e=>setEditingTray({...editingTray,title:e.target.value})}/></label><div className="form-grid"><label>Estimate<select value={editingTray.estimateMin} onChange={e=>setEditingTray({...editingTray,estimateMin:Number(e.target.value)})}><option value={15}>15 min</option><option value={30}>30 min</option><option value={60}>1 hour</option><option value={90}>1.5 hours</option><option value={120}>2 hours</option><option value={180}>3 hours</option></select></label><label>Domain<select value={editingTray.domain} onChange={e=>setEditingTray({...editingTray,domain:e.target.value})}><option value="">None</option>{Object.entries(state.settings.domains).filter(([,v])=>v).map(([d])=><option key={d}>{d}</option>)}</select></label></div></div>}
+    </Modal>
 
     {tab==='aar'&&<><section className="panel aar-grid"><label>Wins<textarea disabled={plan.closed} rows={6} value={plan.wins} onChange={e=>patch(p=>{p.wins=e.target.value})}/></label><label>Friction<textarea disabled={plan.closed} rows={6} value={plan.friction} onChange={e=>patch(p=>{p.friction=e.target.value})}/></label><label>Lessons<textarea disabled={plan.closed} rows={6} value={plan.lessons} onChange={e=>patch(p=>{p.lessons=e.target.value})}/></label><label>Next week main effort<textarea disabled={plan.closed} rows={6} value={plan.nextMain} onChange={e=>patch(p=>{p.nextMain=e.target.value})}/></label></section><div className="aar-build-bar"><div><div className="eyebrow">Transition</div><strong>Turn this review into next week.</strong><p className="hint-line">Carries current unscheduled work and incomplete scheduled tasks forward once, then opens next week’s Mission view.</p></div><button className="button primary" onClick={buildNextWeek}><Icon name="right"/>Build next week</button></div></>}
   </div>
