@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOP — Standard Operating Planner v24</title>
+<title>SOP — Standard Operating Planner v25</title>
 <style>
 :root{
   --bg:#171918;--panel:#202321;--card:#282b29;--ink:#F7F5ED;--muted:#A7B39D;
@@ -1371,8 +1371,392 @@ select option:checked{
 }
 </style>
 
+
+<style id="sop-v25-control-system">
+:root{
+  --control-bg:#252925;
+  --control-bg-hover:#2c312c;
+  --control-border:rgba(167,179,157,.22);
+  --control-border-hover:rgba(167,179,157,.42);
+  --control-shadow:0 1px 0 rgba(255,255,255,.025),0 2px 7px rgba(0,0,0,.08);
+  --control-amber:#FFB000;
+}
+
+/* Cohesive SOP control language */
+.btn,.icon-btn,.menu-action,.more-menu>summary{
+  -webkit-tap-highlight-color:transparent;
+  transition:
+    background-color .13s ease,
+    border-color .13s ease,
+    color .13s ease,
+    box-shadow .13s ease,
+    transform .08s ease,
+    opacity .13s ease;
+}
+.btn{
+  min-height:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:8px 11px;
+  border:1px solid var(--control-border);
+  border-radius:8px;
+  background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(0,0,0,.025)),var(--control-bg);
+  color:#EAE9E1;
+  box-shadow:var(--control-shadow);
+  font:700 10px/1 var(--mono);
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.btn:hover{
+  background:var(--control-bg-hover);
+  border-color:var(--control-border-hover);
+  color:var(--ink);
+  box-shadow:0 1px 0 rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.12);
+}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn:focus-visible,.icon-btn:focus-visible,.menu-action:focus-visible,.more-menu>summary:focus-visible{
+  outline:none!important;
+  box-shadow:0 0 0 3px rgba(255,176,0,.14),0 0 0 1px rgba(255,176,0,.65) inset!important;
+  border-color:rgba(255,176,0,.62)!important;
+}
+.btn.primary{
+  color:#1B1E1B;
+  background:linear-gradient(180deg,#FFC12C,#FFB000);
+  border-color:#FFC53A;
+  box-shadow:0 1px 0 rgba(255,255,255,.23) inset,0 3px 10px rgba(0,0,0,.18);
+}
+.btn.primary:hover{
+  color:#151715;
+  background:linear-gradient(180deg,#FFCA4B,#FFB813);
+  border-color:#FFD15E;
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 5px 15px rgba(0,0,0,.2);
+}
+.btn.danger{
+  color:#cbb7b2;
+  background:rgba(217,139,125,.02);
+  border-color:rgba(217,139,125,.18);
+}
+.btn.danger:hover{
+  color:#F0C1B7;
+  background:rgba(217,139,125,.11);
+  border-color:rgba(217,139,125,.48);
+}
+.btn:disabled,.icon-btn:disabled{
+  cursor:not-allowed;
+  opacity:.38;
+  transform:none!important;
+  box-shadow:none!important;
+}
+
+/* Uniform SVG icons */
+.sop-ui-icon{
+  width:15px;height:15px;
+  flex:0 0 15px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  pointer-events:none;
+}
+.btn.primary .sop-ui-icon{stroke-width:2}
+.sop-icon-only{
+  width:38px;
+  min-width:38px;
+  padding:0!important;
+  gap:0!important;
+}
+.sop-icon-only .sop-ui-icon{width:17px;height:17px;flex-basis:17px}
+
+/* Top navigation becomes a real product navigation surface */
+.primary-nav{
+  gap:2px!important;
+  padding:4px!important;
+  border:1px solid rgba(167,179,157,.16)!important;
+  border-radius:10px!important;
+  background:rgba(18,21,19,.72)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.015);
+}
+.primary-nav .btn{
+  min-height:36px!important;
+  padding:7px 10px!important;
+  border:1px solid transparent!important;
+  border-radius:7px!important;
+  background:transparent!important;
+  color:#899388;
+  box-shadow:none!important;
+  font-size:9px!important;
+  letter-spacing:.075em;
+}
+.primary-nav .btn .sop-ui-icon{width:14px;height:14px}
+.primary-nav .btn:hover{
+  color:#D8DBD2!important;
+  background:rgba(167,179,157,.06)!important;
+}
+.primary-nav .btn.active{
+  color:#FFF7DE!important;
+  background:rgba(255,176,0,.10)!important;
+  border-color:rgba(255,176,0,.27)!important;
+  box-shadow:inset 0 -2px 0 rgba(255,176,0,.82)!important;
+}
+
+/* Header utility controls */
+.header-actions{gap:6px!important}
+.icon-btn,.more-menu>summary{
+  width:38px;
+  height:38px;
+  min-width:38px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  border:1px solid var(--control-border);
+  border-radius:8px;
+  background:var(--control-bg);
+  color:#B7BDB4;
+  cursor:pointer;
+  box-shadow:var(--control-shadow);
+}
+.icon-btn:hover,.more-menu>summary:hover{
+  color:var(--ink);
+  background:var(--control-bg-hover);
+  border-color:var(--control-border-hover);
+}
+.more-menu>summary{list-style:none}
+.more-menu>summary::-webkit-details-marker{display:none}
+.add-primary{
+  min-height:38px!important;
+  padding-inline:13px!important;
+  border-radius:9px!important;
+}
+.inbox-nav{
+  min-height:38px!important;
+  border-radius:9px!important;
+  background:rgba(167,179,157,.055)!important;
+}
+#inboxCount{
+  min-width:20px;
+  height:20px;
+  padding:0 6px;
+  display:inline-grid;
+  place-items:center;
+  border-radius:99px;
+  color:#1B1E1B!important;
+  background:var(--amber);
+  font:800 9px/1 var(--mono);
+}
+.date-stepper{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:3px;
+  border:1px solid rgba(167,179,157,.17);
+  border-radius:10px;
+  background:rgba(18,21,19,.6);
+}
+.date-stepper .icon-btn,.date-stepper .btn{
+  min-height:32px;
+  height:32px;
+  border-color:transparent;
+  background:transparent;
+  box-shadow:none;
+}
+.date-stepper .today-btn{
+  padding-inline:10px;
+  color:#D5D8CF;
+}
+.date-stepper .btn:hover,.date-stepper .icon-btn:hover{background:rgba(167,179,157,.07)}
+
+/* Local tab groups: quiet when idle, obvious when selected */
+.nav:not(.primary-nav){
+  padding:3px!important;
+  gap:2px!important;
+  border:1px solid rgba(167,179,157,.15)!important;
+  border-radius:9px!important;
+  background:rgba(17,20,18,.55)!important;
+}
+.nav:not(.primary-nav) .btn{
+  min-height:31px!important;
+  padding:6px 9px!important;
+  border:1px solid transparent!important;
+  background:transparent!important;
+  color:#8F988E;
+  box-shadow:none!important;
+  font-size:9px;
+}
+.nav:not(.primary-nav) .btn:hover{
+  color:#E4E6DF;
+  background:rgba(167,179,157,.055)!important;
+}
+.nav:not(.primary-nav) .btn.active{
+  color:#FFE9AF!important;
+  background:rgba(255,176,0,.09)!important;
+  border-color:rgba(255,176,0,.24)!important;
+}
+
+/* Overflow menu */
+.more-popover{
+  padding:6px!important;
+  border-radius:10px!important;
+  border-color:rgba(167,179,157,.22)!important;
+  background:#202521!important;
+}
+.menu-action{
+  width:100%;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:9px;
+  padding:8px 9px;
+  border:1px solid transparent;
+  border-radius:7px;
+  background:transparent;
+  color:#B8BEB5;
+  text-align:left;
+  cursor:pointer;
+  font:650 10px/1.25 var(--sans);
+}
+.menu-action:hover{
+  color:var(--ink);
+  background:rgba(167,179,157,.06);
+  border-color:rgba(167,179,157,.12);
+}
+.menu-action .sop-ui-icon{width:16px;height:16px}
+
+/* Secondary action clusters */
+.inbox-actions,.schedule-actions,.wizard-footer .row,.board-context-actions{
+  gap:6px!important;
+}
+.inbox-actions .btn{
+  min-height:31px!important;
+  padding:5px 8px!important;
+  border-radius:7px!important;
+  font-size:8px!important;
+  box-shadow:none!important;
+}
+.tray-add .btn{
+  width:39px;min-width:39px;padding:0;
+}
+.board-quiet{
+  background:rgba(167,179,157,.025)!important;
+  box-shadow:none!important;
+}
+
+/* Make common editing affordances look intentional */
+.q-goal-edit,.board-node-edit{
+  min-height:26px!important;
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  border-radius:6px!important;
+  font-family:var(--mono)!important;
+  letter-spacing:.05em!important;
+}
+.q-goal-edit:hover,.board-node-edit:hover{
+  background:rgba(255,176,0,.12)!important;
+}
+
+/* Forms / modal actions */
+.workspace-modal .schedule-actions,
+.workspace-modal form>.row:last-child,
+.goal-drawer>.row:last-child{
+  align-items:center;
+}
+.workspace-modal .btn.primary,.goal-drawer .btn.primary{
+  min-width:104px;
+}
+
+/* Selected/pressed states */
+.btn[aria-pressed="true"],.btn.tool-on{
+  color:#FFE7A6;
+  background:rgba(255,176,0,.10);
+  border-color:rgba(255,176,0,.34);
+}
+
+/* Tactile but restrained mobile controls */
+@media(max-width:720px){
+  .btn{min-height:44px;padding:9px 11px}
+  .icon-btn,.more-menu>summary,.sop-icon-only{width:44px;height:44px;min-width:44px}
+  .primary-nav .btn{min-height:42px!important;padding:7px 9px!important}
+  .primary-nav .btn .sop-ui-icon{width:15px;height:15px}
+  .header-actions{gap:5px!important}
+  .date-stepper .icon-btn,.date-stepper .btn{height:38px;min-height:38px}
+  .inbox-nav,.add-primary{min-height:44px!important}
+  .menu-action{min-height:44px}
+  .inbox-actions .btn{min-height:36px!important}
+}
+@media(max-width:500px){
+  .primary-nav .btn{font-size:8px!important;gap:5px}
+  .primary-nav{max-width:100%;overflow-x:auto}
+  .add-primary{padding-inline:11px!important}
+}
+</style>
+
 </head>
 <body>
+
+<svg class="sop-icon-sprite" aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <symbol id="sop-i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M9.5 20v-6h5v6"/></symbol>
+    <symbol id="sop-i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"/></symbol>
+    <symbol id="sop-i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 9h18"/><path d="M7 13h3M14 13h3M7 17h3"/></symbol>
+    <symbol id="sop-i-week" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M13 4v16M18 4v16M3 9h18"/></symbol>
+    <symbol id="sop-i-day" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M12 8v4l3 2M12 2v2M12 20v2M2 12h2M20 12h2"/></symbol>
+    <symbol id="sop-i-tasks" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8 11 2 2 5-5M8 17h8"/></symbol>
+    <symbol id="sop-i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><circle cx="16" cy="15" r="1.5"/><path d="M9.5 9h3l2.5 5"/></symbol>
+    <symbol id="sop-i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="sop-i-inbox" viewBox="0 0 24 24"><path d="M4 5h16l1 10H15l-2 3h-2l-2-3H3L4 5Z"/><path d="M8 9h8"/></symbol>
+    <symbol id="sop-i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v6h6M12 7v5l3 2"/></symbol>
+    <symbol id="sop-i-repeat" viewBox="0 0 24 24"><path d="M5 7h12l-2-2M19 17H7l2 2"/><path d="M19 7l2 2-2 2M5 17l-2-2 2-2"/></symbol>
+    <symbol id="sop-i-settings" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10M8 4v6M16 14v6"/></symbol>
+    <symbol id="sop-i-export" viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M5 13v7h14v-7"/></symbol>
+    <symbol id="sop-i-import" viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M5 13v7h14v-7"/></symbol>
+    <symbol id="sop-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="sop-i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="sop-i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="sop-i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="sop-i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="sop-i-checkcircle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="sop-i-edit" viewBox="0 0 24 24"><path d="m5 16-1 4 4-1L19 8l-3-3L5 16Z"/><path d="m14 7 3 3"/></symbol>
+    <symbol id="sop-i-save" viewBox="0 0 24 24"><path d="M5 4h12l2 2v14H5V4Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/></symbol>
+    <symbol id="sop-i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/></symbol>
+    <symbol id="sop-i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/></symbol>
+    <symbol id="sop-i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+    <symbol id="sop-i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M8 10h8M8 14h8M8 18h5"/></symbol>
+    <symbol id="sop-i-diamond" viewBox="0 0 24 24"><path d="m12 3 9 9-9 9-9-9 9-9Z"/></symbol>
+    <symbol id="sop-i-template" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M9 10h12"/></symbol>
+    <symbol id="sop-i-inboxplus" viewBox="0 0 24 24"><path d="M4 5h16l1 10H15l-2 3h-2l-2-3H3L4 5Z"/><path d="M12 7v6M9 10h6"/></symbol>
+    <symbol id="sop-i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="sop-i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></symbol>
+    <symbol id="sop-i-focus" viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="sop-i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
+    <symbol id="sop-i-fit" viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></symbol>
+    <symbol id="sop-i-cursor" viewBox="0 0 24 24"><path d="m5 3 12 9-6 1-3 6-3-16Z"/></symbol>
+    <symbol id="sop-i-hand" viewBox="0 0 24 24"><path d="M7 11V6a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v8c0 4-3 7-7 7h-1c-3 0-5-2-7-5l-2-3a2 2 0 0 1 3-2l2 2"/></symbol>
+    <symbol id="sop-i-multi" viewBox="0 0 24 24"><rect x="4" y="4" width="9" height="9" rx="1"/><rect x="11" y="11" width="9" height="9" rx="1"/></symbol>
+    <symbol id="sop-i-note" viewBox="0 0 24 24"><path d="M5 4h14v11l-5 5H5V4Z"/><path d="M14 20v-5h5M8 8h8M8 12h6"/></symbol>
+    <symbol id="sop-i-text" viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></symbol>
+    <symbol id="sop-i-shape" viewBox="0 0 24 24"><rect x="3" y="4" width="9" height="9" rx="1"/><circle cx="16.5" cy="15.5" r="4.5"/></symbol>
+    <symbol id="sop-i-star" viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.9-5.4 2.9 1-6-4.3-4.2 6-.9L12 3Z"/></symbol>
+    <symbol id="sop-i-chart" viewBox="0 0 24 24"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-7h4v7M3 20h18"/></symbol>
+    <symbol id="sop-i-connect" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="m8 8 8 8"/></symbol>
+    <symbol id="sop-i-group" viewBox="0 0 24 24"><rect x="3" y="5" width="10" height="10" rx="1"/><rect x="11" y="9" width="10" height="10" rx="1"/></symbol>
+    <symbol id="sop-i-ungroup" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="13" width="8" height="8" rx="1"/><path d="M11 7h4M7 12v4M17 8v3M10 17h3"/></symbol>
+    <symbol id="sop-i-duplicate" viewBox="0 0 24 24"><rect x="7" y="7" width="13" height="13" rx="2"/><path d="M16 7V4H4v12h3"/></symbol>
+    <symbol id="sop-i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="sop-i-details" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 12h4M12 12h8M4 17h12M20 17h0"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="17" r="2"/></symbol>
+    <symbol id="sop-i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="sop-i-undo" viewBox="0 0 24 24"><path d="M9 7 4 12l5 5M5 12h8a6 6 0 0 1 6 6"/></symbol>
+    <symbol id="sop-i-archive" viewBox="0 0 24 24"><path d="M4 7h16v13H4V7ZM3 4h18v3H3V4Z"/><path d="M9 11h6"/></symbol>
+    <symbol id="sop-i-eye" viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+  </defs>
+</svg>
+
 <div class="app" id="app">
   <section class="panel toolbar app-header">
     <div class="header-main">
@@ -1410,7 +1794,7 @@ select option:checked{
           </div>
         </details>
         <input class="file-input" id="importFile" type="file" accept="application/json">
-        <button class="btn primary add-primary" id="addBtn">+ ADD</button>
+        <button class="btn primary add-primary" id="addBtn">ADD</button>
       </div>
     </div>
 
@@ -1466,7 +1850,7 @@ select option:checked{
     <div id="quarterMap">
       <div class="between" style="margin-bottom:7px">
         <div><div class="eyebrow">Quarter / 13-Week Map</div><div class="small muted" style="margin-top:4px">Tap or click a week in a goal lane to add a milestone. Tap the goal bar to edit the goal. Drag markers to move them and resize goal bars from either edge.</div></div>
-        <button class="btn primary" id="addMilestoneBtn">+ MILESTONE</button>
+        <button class="btn primary" id="addMilestoneBtn">MILESTONE</button>
       </div>
       <div id="qmap" class="qmap-layout"></div>
       <div class="qmap-legend"><span><b>◆</b> milestone</span><span><b>◇</b> decision point</span><span><b>▲</b> deadline</span><span>Goal bars show intended execution window</span></div>
@@ -1644,7 +2028,7 @@ select option:checked{
         <div class="board-head">
           <div class="board-identity">
             <div class="board-title-stack"><div class="eyebrow">Planning Whiteboard</div><div class="board-name-row"><select id="boardSelect" aria-label="Whiteboard"></select><span class="board-live-dot" aria-hidden="true"></span><span class="board-saved-copy">LOCAL WORKSPACE</span></div></div>
-            <div class="board-file-actions"><button class="btn board-quiet" id="newBoardBtn">+ NEW BOARD</button><button class="btn board-quiet" id="renameBoardBtn">RENAME</button><button class="btn danger board-quiet" id="deleteBoardBtn">DELETE</button></div>
+            <div class="board-file-actions"><button class="btn board-quiet" id="newBoardBtn">NEW BOARD</button><button class="btn board-quiet" id="renameBoardBtn">RENAME</button><button class="btn danger board-quiet" id="deleteBoardBtn">DELETE</button></div>
           </div>
           <div class="board-primary-actions"><button class="btn primary" id="boardTemplatesBtn">TEMPLATES</button><button class="btn" id="boardFitBtn">FIT BOARD</button></div>
         </div>
@@ -1853,7 +2237,7 @@ select option:checked{
           <input id="inboxTitle" enterkeyhint="done" autocomplete="off" placeholder="Type anything you need to remember, then press Enter…">
           <button class="btn primary" id="inboxCaptureBtn" type="button">CAPTURE</button>
         </div>
-        <div class="inbox-detail-actions"><button class="btn" id="inboxDetailsToggle" type="button">+ DETAILS</button><span class="small muted">Optional · estimate, domain, notes</span></div>
+        <div class="inbox-detail-actions"><button class="btn" id="inboxDetailsToggle" type="button">DETAILS</button><span class="small muted">Optional · estimate, domain, notes</span></div>
         <div id="inboxDetails" class="inbox-details hidden">
           <div class="field"><label>Estimate</label><div class="row"><input id="inboxEstimate" type="number" min="5" step="5" value="30" inputmode="numeric"><span class="small muted">minutes</span></div></div>
           <div class="field"><label>Domain</label><select id="inboxDomain"></select></div>
@@ -1890,7 +2274,7 @@ select option:checked{
     <div class="workspace-modal">
       <div class="between"><div><div class="eyebrow">Recurring SOPs / Routines</div><h2>Reusable operating checklists</h2></div><button class="btn" id="closeSops">CLOSE</button></div>
       <div class="sop-layout">
-        <div><button class="btn primary" id="newSopBtn">+ NEW SOP</button><div id="sopList" class="sop-list"></div></div>
+        <div><button class="btn primary" id="newSopBtn">NEW SOP</button><div id="sopList" class="sop-list"></div></div>
         <form id="sopForm" novalidate class="sop-form hidden">
           <input type="hidden" id="sopId">
           <div class="field"><label>Name</label><input id="sopName" required></div>
@@ -3946,7 +4330,7 @@ select option:checked{
     if(goalEdit?.kind==='quarter'&&!getQuarter().closed){
       const body=$('#goalDrawerBody');
       if(body&&!body.querySelector('[data-gd-add-milestone]')){
-        const box=document.createElement('div');box.className='field';box.innerHTML='<div class="between"><div><label>Quarter Map Checkpoints</label><div class="small muted" style="margin-top:4px">Milestones, decision points, and deadlines are dated proof-of-progress on the map.</div></div><button type="button" class="btn" data-gd-add-milestone="1">+ MILESTONE</button></div>';body.appendChild(box)
+        const box=document.createElement('div');box.className='field';box.innerHTML='<div class="between"><div><label>Quarter Map Checkpoints</label><div class="small muted" style="margin-top:4px">Milestones, decision points, and deadlines are dated proof-of-progress on the map.</div></div><button type="button" class="btn" data-gd-add-milestone="1">MILESTONE</button></div>';body.appendChild(box)
       }
     }
   };
@@ -4302,7 +4686,110 @@ select option:checked{
   };
 
 
+
+  /* ---------- SOP v25: unified control + icon system ---------- */
+  const SOP_ICON_BY_ID={
+    searchBtn:'search',inboxBtn:'inbox',historyBtn:'history',sopsBtn:'repeat',settingsBtn:'settings',
+    exportBtn:'export',importBtn:'import',addBtn:'plus',prevBtn:'left',todayBtn:'calendar',nextBtn:'right',
+    hintAction:'eye',dismissHint:'x',homeInboxBtn:'inbox',planQuarterBtn:'compass',addMilestoneBtn:'diamond',
+    closeQuarterBtn:'checkcircle',closeMonthBtn:'checkcircle',planWeekBtn:'compass',editMissionBtn:'edit',
+    saveTemplateBtn:'save',applyTemplateBtn:'template',addFromInboxBtn:'inboxplus',trayAdd:'plus',
+    buildNext:'right',closeWeekBtn:'checkcircle',focusModeBtn:'focus',exitFocusBtn:'x',
+    clearCompletedTodos:'trash',todoQuickAddBtn:'plus',newBoardBtn:'plus',renameBoardBtn:'edit',
+    deleteBoardBtn:'trash',boardTemplatesBtn:'template',boardFitBtn:'fit',boardMultiBtn:'multi',
+    boardGroupBtn:'group',boardUngroupBtn:'ungroup',boardDuplicateBtn:'duplicate',boardDeleteBtn:'trash',
+    boardZoomOut:'minus',boardZoomIn:'plus',closeTodoEdit:'x',deleteTodoEdit:'trash',
+    scheduleTodoEdit:'calendar',todoEditSaveBtn:'save',closeBoardName:'x',cancelBoardName:'x',
+    saveBoardName:'save',closeBoardTemplates:'x',closeBoardInspector:'x',boardInspectorDelete:'trash',
+    boardInspectorSaveBtn:'save',closeQMilestone:'x',cancelQMilestone:'x',qMilestoneSaveBtn:'diamond',
+    closeSchedule:'x',cancelSchedule:'x',saveScheduleBtn:'calendar',closeEditor:'x',eventSaveBtn:'save',
+    moreBtn:'details',deleteBtn:'trash',closePalette:'x',closeInbox:'x',inboxCaptureBtn:'inboxplus',
+    inboxDetailsToggle:'details',wizardClose:'x',wizardBack:'left',wizardCancel:'x',wizardNext:'right',
+    closeGoalDrawer:'x',saveGoalBtn:'save',closeSops:'x',newSopBtn:'plus',sopSaveBtn:'save',
+    runSopNow:'play',deleteSopBtn:'trash',closeSettings:'x',confirmCancel:'x',confirmOk:'check',
+    undoBtn:'undo'
+  };
+  const SOP_VIEW_ICONS={home:'home',quarter:'target',month:'calendar',week:'week',day:'day',tasks:'tasks',board:'board'};
+  const SOP_BOARD_TOOL_ICONS={select:'cursor',pan:'hand',note:'note',text:'text',shape:'shape',icon:'star',chart:'chart',connect:'connect'};
+  const SOP_TEXT_ICONS=[
+    [/^THIS WEEK$/i,'right'],[/^EDIT$/i,'edit'],[/^ARCHIVE$/i,'archive'],[/^SCHEDULE$/i,'calendar'],
+    [/^DELETE$/i,'trash'],[/^SAVE(?: .*)?$/i,'save'],[/^CLOSE$/i,'x'],[/^CANCEL$/i,'x'],
+    [/^CREATE BOARD$/i,'plus'],[/^RENAME$/i,'edit'],[/^GROUP$/i,'group'],[/^UNGROUP$/i,'ungroup'],
+    [/^DUPLICATE$/i,'duplicate'],[/^TEMPLATES?$/i,'template'],[/^FIT(?: BOARD)?$/i,'fit'],
+    [/^(?:15|30) MIN$/i,'clock'],[/^(?:COMFORTABLE|COMPACT)$/i,'layout'],[/^OPEN$/i,'eye'],
+    [/^DONE$/i,'check'],[/^DUE TODAY$/i,'calendar'],[/^CLEAR COMPLETED$/i,'trash'],
+    [/^FROM INBOX$/i,'inboxplus'],[/^RUN NOW$/i,'play'],[/^CONFIRM$/i,'check'],
+    [/^ADD(?: TASK| TO MAP)?$/i,'plus'],[/^CAPTURE$/i,'inboxplus'],[/^DETAILS$/i,'details']
+  ];
+  const SOP_ICON_ONLY_IDS=new Set(['searchBtn','prevBtn','nextBtn','trayAdd','boardZoomOut','boardZoomIn']);
+
+  function sopSvgIcon(name){
+    if(!name)return null;
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','sop-ui-icon');
+    svg.setAttribute('aria-hidden','true');
+    const use=document.createElementNS('http://www.w3.org/2000/svg','use');
+    use.setAttribute('href',`#sop-i-${name}`);
+    svg.appendChild(use);
+    return svg;
+  }
+  function sopCleanControlText(el){
+    if(!el)return '';
+    return (el.textContent||'').replace(/\s+/g,' ').trim()
+      .replace(/^[+↖✥▦▤◇◆▥↗]\s*/,'');
+  }
+  function sopIconForControl(el){
+    if(!el)return null;
+    if(el.id&&SOP_ICON_BY_ID[el.id])return SOP_ICON_BY_ID[el.id];
+    if(el.dataset?.view&&SOP_VIEW_ICONS[el.dataset.view])return SOP_VIEW_ICONS[el.dataset.view];
+    if(el.dataset?.boardTool&&SOP_BOARD_TOOL_ICONS[el.dataset.boardTool])return SOP_BOARD_TOOL_ICONS[el.dataset.boardTool];
+    if(el.dataset?.qtab)return el.dataset.qtab==='map'?'map':el.dataset.qtab==='plan'?'list':'clipboard';
+    if(el.dataset?.wtab)return el.dataset.wtab==='mission'?'target':el.dataset.wtab==='schedule'?'calendar':'clipboard';
+    const t=sopCleanControlText(el);
+    for(const [re,icon] of SOP_TEXT_ICONS)if(re.test(t))return icon;
+    return null;
+  }
+  function sopDecorateControl(el){
+    if(!(el instanceof HTMLElement))return;
+    const name=sopIconForControl(el);
+    if(!name)return;
+    const clean=sopCleanControlText(el);
+    if(!el.dataset.sopAccessibleLabel&&clean)el.dataset.sopAccessibleLabel=clean;
+    if(SOP_ICON_ONLY_IDS.has(el.id)){
+      el.classList.add('sop-icon-only');
+      if(!el.getAttribute('aria-label'))el.setAttribute('aria-label',el.dataset.sopAccessibleLabel||el.title||clean||name);
+      [...el.childNodes].forEach(n=>{if(!(n.nodeType===1&&n.classList?.contains('sop-ui-icon')))n.remove()});
+    }
+    if(!el.querySelector(':scope > .sop-ui-icon')){
+      const icon=sopSvgIcon(name);
+      if(icon)el.prepend(icon);
+    }
+    el.classList.add('sop-control');
+  }
+  function sopApplyIcons(root=document){
+    const nodes=[];
+    if(root instanceof HTMLElement&&root.matches('button,.menu-action,summary.icon-btn'))nodes.push(root);
+    root.querySelectorAll?.('button,.menu-action,summary.icon-btn').forEach(el=>nodes.push(el));
+    nodes.forEach(sopDecorateControl);
+  }
+  let sopIconObserver=null;
+  function sopStartIconObserver(){
+    if(sopIconObserver)return;
+    sopIconObserver=new MutationObserver(records=>{
+      const pending=new Set();
+      records.forEach(r=>{
+        if(r.target instanceof HTMLElement&&r.target.closest)pending.add(r.target.closest('button,.menu-action,summary.icon-btn')||r.target);
+        r.addedNodes.forEach(n=>{if(n instanceof HTMLElement)pending.add(n)});
+      });
+      pending.forEach(n=>sopApplyIcons(n));
+    });
+    sopIconObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+
+
   load();runDueSops();render();
+  sopApplyIcons(document);
+  sopStartIconObserver();
 })();
 </script>
 </body>
