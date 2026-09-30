@@ -15,7 +15,7 @@ export function WhiteboardView(){
   const board=state.whiteboards.find(b=>b.id===state.activeWhiteboardId)??state.whiteboards[0]
   const [selected,setSelected]=useState<string|null>(null)
   const [editing,setEditing]=useState<BoardNode|null>(null)
-  const [boardModal,setBoardModal]=useState<'new'|'rename'|null>(null)
+  const [boardModal,setBoardModal]=useState<'new'|'rename'|'delete'|null>(null)
   const [boardName,setBoardName]=useState('')
   const [connectFrom,setConnectFrom]=useState<string|null>(null)
   const drag=useRef<NodeDrag|null>(null)
@@ -31,8 +31,18 @@ export function WhiteboardView(){
   function saveNode(){if(!editing)return;patchBoard('Whiteboard item saved',editing.title,b=>{const i=b.nodes.findIndex(n=>n.id===editing.id);if(i>=0)b.nodes[i]=editing});setEditing(null)}
   function duplicateSelected(){if(!selectedNode)return;const copy={...structuredClone(selectedNode),id:nextId('N'),x:selectedNode.x+30,y:selectedNode.y+30,title:`${selectedNode.title} copy`};patchBoard('Whiteboard item duplicated',copy.title,b=>b.nodes.push(copy));setSelected(copy.id)}
   function deleteSelected(){if(!selected)return;patchBoard('Whiteboard item deleted','',b=>{b.nodes=b.nodes.filter(n=>n.id!==selected);b.edges=b.edges.filter(e=>e.from!==selected&&e.to!==selected)});setSelected(null)}
-  function openBoardModal(mode:'new'|'rename'){setBoardModal(mode);setBoardName(mode==='rename'?board.name:'')}
-  function saveBoard(){const name=boardName.trim();if(!name)return;if(boardModal==='rename')patchBoard('Whiteboard renamed',name,b=>{b.name=name});else{const id=nextId('BOARD');mutate('Whiteboard created',name,d=>{d.whiteboards.push({id,name,nodes:[],edges:[],viewport:{x:50,y:50,scale:1}});d.activeWhiteboardId=id});setSelected(null)}setBoardModal(null)}
+  function openBoardModal(mode:'new'|'rename'|'delete'){setBoardModal(mode);setBoardName(mode==='rename'?board.name:'')}
+  function saveBoard(){
+    if(boardModal==='delete'){
+      if(state.whiteboards.length<=1)return
+      mutate('Whiteboard deleted',board.name,d=>{d.whiteboards=d.whiteboards.filter(x=>x.id!==board.id);d.activeWhiteboardId=d.whiteboards[0]?.id||''})
+      setSelected(null);setBoardModal(null);return
+    }
+    const name=boardName.trim();if(!name)return
+    if(boardModal==='rename')patchBoard('Whiteboard renamed',name,b=>{b.name=name})
+    else{const id=nextId('BOARD');mutate('Whiteboard created',name,d=>{d.whiteboards.push({id,name,nodes:[],edges:[],viewport:{x:50,y:50,scale:1}});d.activeWhiteboardId=id});setSelected(null)}
+    setBoardModal(null)
+  }
   function applyTemplate(kind:'brain'|'goal'|'decision'){
     const cx=300,cy=220
     const nodes:BoardNode[]=kind==='brain'?
@@ -46,7 +56,7 @@ export function WhiteboardView(){
 
   return <div className="board-view">
     <header className="board-topbar">
-      <div className="board-title-cluster"><select value={board.id} onChange={e=>mutate('Whiteboard selected',e.target.value,d=>{d.activeWhiteboardId=e.target.value})}>{state.whiteboards.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}</select><button className="icon-button subtle" onClick={()=>openBoardModal('new')} aria-label="New board"><Icon name="plus"/></button><button className="icon-button subtle" onClick={()=>openBoardModal('rename')} aria-label="Rename board"><Icon name="edit"/></button></div>
+      <div className="board-title-cluster"><select value={board.id} onChange={e=>mutate('Whiteboard selected',e.target.value,d=>{d.activeWhiteboardId=e.target.value})}>{state.whiteboards.map(b=><option key={b.id} value={b.id}>{b.name}</option>)}</select><button className="icon-button subtle" onClick={()=>openBoardModal('new')} aria-label="New board"><Icon name="plus"/></button><button className="icon-button subtle" onClick={()=>openBoardModal('rename')} aria-label="Rename board"><Icon name="edit"/></button><button className="icon-button subtle" disabled={state.whiteboards.length<=1} onClick={()=>openBoardModal('delete')} aria-label="Delete board"><Icon name="trash"/></button></div>
       <div className="board-template-actions"><button className="button" onClick={()=>applyTemplate('brain')}><Icon name="template"/>Brain Dump</button><button className="button" onClick={()=>applyTemplate('goal')}><Icon name="target"/>Goal Map</button><button className="button" onClick={()=>applyTemplate('decision')}><Icon name="connect"/>Decision Map</button></div>
       <div className="board-zoom"><button className="icon-button subtle" onClick={()=>patchBoard('Zoom adjusted','',b=>{b.viewport.scale=Math.max(.4,b.viewport.scale-.1)})}>−</button><span>{Math.round(board.viewport.scale*100)}%</span><button className="icon-button subtle" onClick={()=>patchBoard('Zoom adjusted','',b=>{b.viewport.scale=Math.min(2.5,b.viewport.scale+.1)})}>+</button></div>
     </header>
@@ -66,6 +76,6 @@ export function WhiteboardView(){
     <Modal open={!!editing} title="Edit whiteboard item" eyebrow="Whiteboard" onClose={()=>setEditing(null)} footer={<><button className="button" onClick={()=>setEditing(null)}>Cancel</button><button className="button primary" onClick={saveNode}><Icon name="save"/>Save</button></>}>
       {editing&&<div className="form-stack"><label>Title<input value={editing.title} onChange={e=>setEditing({...editing,title:e.target.value})}/></label><label>Text<textarea rows={5} value={editing.text} onChange={e=>setEditing({...editing,text:e.target.value})}/></label><div className="form-grid"><label>Tone<select value={editing.tone} onChange={e=>setEditing({...editing,tone:e.target.value as BoardNode['tone']})}><option value="neutral">Neutral</option><option value="amber">Amber</option><option value="sage">Sage</option><option value="bone">Bone</option></select></label>{editing.type==='shape'&&<label>Shape<select value={editing.shape} onChange={e=>setEditing({...editing,shape:e.target.value as BoardNode['shape']})}><option value="rect">Rectangle</option><option value="round">Rounded</option><option value="ellipse">Ellipse</option><option value="diamond">Diamond</option></select></label>}</div></div>}
     </Modal>
-    <Modal open={!!boardModal} title={boardModal==='new'?'New board':'Rename board'} eyebrow="Planning Whiteboard" onClose={()=>setBoardModal(null)} footer={<><button className="button" onClick={()=>setBoardModal(null)}>Cancel</button><button className="button primary" onClick={saveBoard}><Icon name="save"/>{boardModal==='new'?'Create board':'Save name'}</button></>}><label className="form-stack">Board name<input autoFocus value={boardName} onChange={e=>setBoardName(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();saveBoard()}}}/></label></Modal>
+    <Modal open={!!boardModal} title={boardModal==='new'?'New board':boardModal==='rename'?'Rename board':'Delete board'} eyebrow="Planning Whiteboard" onClose={()=>setBoardModal(null)} footer={<><button className="button" onClick={()=>setBoardModal(null)}>Cancel</button><button className={boardModal==='delete'?'button danger':'button primary'} onClick={saveBoard}><Icon name={boardModal==='delete'?'trash':'save'}/>{boardModal==='new'?'Create board':boardModal==='rename'?'Save name':'Delete board'}</button></>}>{boardModal==='delete'?<div className="delete-warning"><strong>Delete “{board.name}”?</strong><span>This removes the board, its nodes, and connections. You can use Undo immediately afterward if needed.</span></div>:<label className="form-stack">Board name<input autoFocus value={boardName} onChange={e=>setBoardName(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'){e.preventDefault();saveBoard()}}}/></label>}</Modal>
   </div>
 }
