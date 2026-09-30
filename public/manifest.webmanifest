@@ -1,0 +1,9 @@
+{
+  "name": "SOP — Standard Operating Planner",
+  "short_name": "SOP",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#181c19",
+  "theme_color": "#181c19",
+  "description": "Decide what matters. Put it on the calendar. Execute. Review. Adjust."
+}
