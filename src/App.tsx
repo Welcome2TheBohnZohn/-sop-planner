@@ -16,7 +16,7 @@ import { WhiteboardView } from './views/WhiteboardView'
 import { instantiateRoutineDraft, routineDueKey } from './utils/routines'
 
 function PlannerApp(){
-  const {ready,state,mutate}=usePlanner()
+  const {ready,state,mutate,undo}=usePlanner()
   const [view,setView]=useState<AppView>('week')
   const [inboxOpen,setInboxOpen]=useState(false)
   const [searchOpen,setSearchOpen]=useState(false)
@@ -26,7 +26,7 @@ function PlannerApp(){
     const due=state.routines.filter(r=>r.active&&r.cadence!=='Manual').map(r=>({r,key:routineDueKey(r)})).filter(x=>x.key&&state.routineRuns[x.r.id]!==x.key)
     if(due.length)mutate('Recurring SOPs instantiated',`${due.length} routine${due.length===1?'':'s'}`,d=>{for(const item of due){const r=d.routines.find(x=>x.id===item.r.id);if(r&&item.key)instantiateRoutineDraft(d,r,item.key)}})
   },[ready,state.routines,state.routineRuns,mutate])
-  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setInboxOpen(false);setScheduleSeed(null)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[])
+  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!e.shiftKey){e.preventDefault();undo()}if(e.key==='Escape'){setSearchOpen(false);setInboxOpen(false);setScheduleSeed(null)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[undo])
   if(!ready)return <div className="boot-screen"><div className="brand-mark large">SOP<span>›_</span></div><strong>Loading planner…</strong></div>
   function scheduleTodo(todo:TodoItem){setScheduleSeed({date:todo.due||state.selectedDate,time:'09:00',title:todo.title,type:'Task',source:{kind:'todo',id:todo.id}})}
   let content:ReactNode
