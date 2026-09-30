@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOP — Standard Operating Planner v22</title>
+<title>SOP — Standard Operating Planner v24</title>
 <style>
 :root{
   --bg:#171918;--panel:#202321;--card:#282b29;--ink:#F7F5ED;--muted:#A7B39D;
@@ -1292,6 +1292,85 @@ select option:checked{
 }
 </style>
 
+
+<style id="sop-v23-day-drag">
+.day-drag-tip{min-width:116px;text-align:center}
+.day-event.dragging{transition:transform .06s linear,height .06s linear}
+@media (pointer:coarse){
+  .day-event{min-height:22px}
+  .day-resize{height:18px}
+}
+</style>
+
+
+<style id="sop-v24-whiteboard-shape-board-actions">
+.board-name-modal{
+  width:min(520px,calc(100% - 28px));
+  padding:16px;
+  border-radius:12px;
+}
+.board-name-modal #boardNameInput{
+  min-height:46px;
+  font-size:17px;
+  font-weight:650;
+}
+.board-node.shape{
+  overflow:hidden;
+}
+.board-node.shape .board-shape-content{
+  position:absolute;
+  inset:13px 18px 16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+  pointer-events:none;
+}
+.board-node.shape.ellipse .board-shape-content{
+  inset:20% 22%;
+}
+.board-node.shape .board-shape-title{
+  width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:var(--ink);
+  font:700 12px/1.2 var(--sans);
+  letter-spacing:.01em;
+}
+.board-node.shape .board-shape-text{
+  width:100%;
+  max-height:2.7em;
+  overflow:hidden;
+  color:#aeb6ac;
+  font-size:10px;
+  line-height:1.35;
+}
+.board-node.shape .board-shape-type{
+  color:#748071;
+  font:700 7px/1 var(--mono);
+  letter-spacing:.11em;
+}
+.board-node.shape .board-node-edit,
+.board-node.shape .board-resize{
+  z-index:12;
+}
+.board-node.shape.ellipse .board-node-edit{
+  right:20%!important;
+  bottom:12%!important;
+}
+.board-node.shape.ellipse .board-resize{
+  right:12%!important;
+  bottom:13%!important;
+}
+@media(max-width:700px){
+  .board-name-modal{width:calc(100% - 16px);padding:13px}
+  .board-node.shape.ellipse .board-shape-content{inset:19% 20%}
+}
+</style>
+
 </head>
 <body>
 <div class="app" id="app">
@@ -1601,6 +1680,30 @@ select option:checked{
       <div class="two"><div class="field"><label>Due</label><input id="todoEditDue" type="date"></div><div class="field"><label>Domain</label><select id="todoEditDomain"></select></div></div>
       <div class="field"><label>Notes</label><textarea id="todoEditNotes" rows="6" placeholder="Optional context, phone number, link, reminder, or detail"></textarea></div>
       <div class="row" style="justify-content:space-between"><button type="button" class="btn danger" id="deleteTodoEdit">DELETE</button><div class="row"><button type="button" class="btn" id="scheduleTodoEdit">SCHEDULE</button><button class="btn primary" id="todoEditSaveBtn" type="button">SAVE TASK</button></div></div>
+    </form>
+  </div>
+
+
+  <!-- WHITEBOARD NAME EDITOR -->
+  <div id="boardNameOverlay" class="overlay hidden">
+    <form id="boardNameForm" class="workspace-modal board-name-modal" novalidate>
+      <div class="between">
+        <div>
+          <div class="eyebrow">Planning Whiteboard</div>
+          <h2 id="boardNameHeading">New Board</h2>
+          <div id="boardNameSub" class="small muted" style="margin-top:5px">Create a separate thinking surface.</div>
+        </div>
+        <button type="button" class="btn" id="closeBoardName">CLOSE</button>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label for="boardNameInput">Board Name</label>
+        <input id="boardNameInput" maxlength="80" enterkeyhint="done" autocomplete="off" placeholder="New Planning Board">
+      </div>
+      <div id="boardNameError" class="schedule-error hidden" role="alert"></div>
+      <div class="schedule-actions">
+        <button type="button" class="btn" id="cancelBoardName">CANCEL</button>
+        <button type="submit" class="btn primary" id="saveBoardName">CREATE BOARD</button>
+      </div>
     </form>
   </div>
 
@@ -4012,7 +4115,7 @@ select option:checked{
     b.viewport.scale=scale;b.viewport.x=(r.width-w*scale)/2-minX*scale;b.viewport.y=(r.height-h*scale)/2-minY*scale;save(false);renderBoard()
   };
 
-  const DAY_V22_START=4*60,DAY_V22_END=23*60,DAY_V22_STEP=15,DAY_V22_PX_PER_HOUR=34;
+  const DAY_V22_START=4*60,DAY_V22_END=23*60,DAY_V22_STEP=30,DAY_V22_PX_PER_HOUR=34;
   let dayGestureV22=null;
   function dayDurationV22(ev){return ev?.start&&ev?.end?Math.max(DAY_V22_STEP,minutes(ev.end)-minutes(ev.start)):30}
   function daySnapV22(m){return Math.round(m/DAY_V22_STEP)*DAY_V22_STEP}
@@ -4046,17 +4149,34 @@ select option:checked{
   }
   window.addEventListener('pointermove',e=>{
     const g=dayGestureV22;if(!g||g.pointerId!==e.pointerId)return;const dx=e.clientX-g.startX,dy=e.clientY-g.startY;if(!g.moved&&Math.hypot(dx,dy)<4)return;g.moved=true;g.el?.classList.add('dragging');clearDayDropV22();const target=dayPointerTargetV22(e.clientX,e.clientY);if(target?.el)target.el.classList.add('day-drop-target');
-    if(g.kind==='move')g.el.style.transform=`translateY(${dy}px)`;
-    else if(g.kind==='resizeBottom'){const h=Math.max(15,(g.duration+dy/DAY_V22_PX_PER_HOUR*60)/60*DAY_V22_PX_PER_HOUR-2);g.el.style.height=h+'px'}
-    else if(g.kind==='resizeTop'){const newStart=dayClampV22(daySnapV22(g.origStart+dy/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,g.origEnd-DAY_V22_STEP),delta=(newStart-g.origStart)/60*DAY_V22_PX_PER_HOUR;g.el.style.transform=`translateY(${delta}px)`;g.el.style.height=Math.max(15,(g.origEnd-newStart)/60*DAY_V22_PX_PER_HOUR-2)+'px'}
+    if(g.kind==='move'){
+      const previewStart=dayClampV22(daySnapV22(g.origStart+dy/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,DAY_V22_END-g.duration);
+      const snappedDy=(previewStart-g.origStart)/60*DAY_V22_PX_PER_HOUR;
+      g.el.style.transform=`translateY(${snappedDy}px)`
+    }else if(g.kind==='resizeBottom'){
+      const previewEnd=dayClampV22(daySnapV22(g.origEnd+dy/DAY_V22_PX_PER_HOUR*60),g.origStart+DAY_V22_STEP,DAY_V22_END);
+      const h=Math.max(15,(previewEnd-g.origStart)/60*DAY_V22_PX_PER_HOUR-2);
+      g.el.style.height=h+'px'
+    }else if(g.kind==='resizeTop'){
+      const newStart=dayClampV22(daySnapV22(g.origStart+dy/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,g.origEnd-DAY_V22_STEP),
+            delta=(newStart-g.origStart)/60*DAY_V22_PX_PER_HOUR;
+      g.el.style.transform=`translateY(${delta}px)`;
+      g.el.style.height=Math.max(15,(g.origEnd-newStart)/60*DAY_V22_PX_PER_HOUR-2)+'px'
+    }
     updateDayTipV22(g,e.clientX,e.clientY)
   },true);
   function finishDayGestureV22(e){
     const g=dayGestureV22;if(!g||g.pointerId!==e.pointerId)return;dayGestureV22=null;clearDayDropV22();g.tip?.remove();g.el?.classList.remove('dragging');if(g.el){g.el.style.transform='';g.el.style.height=''}if(!g.moved)return;suppressClickUntil=Date.now()+400;
     const ev=state.events.find(x=>x.id===g.id);if(!ev)return;const target=dayPointerTargetV22(e.clientX,e.clientY);
     if(g.kind==='move'){
-      if(target?.kind==='allDay'){mutate('Item moved to all day',()=>{recordEventMove(ev,g.before,{date:ev.date,start:'',end:'',allDay:true},'day drag');ev.allDay=true;ev.start='';ev.end=''},ev.title)}
-      else{const proposed=target?.kind==='time'?target.minute:daySnapV22(g.origStart+(e.clientY-g.startY)/DAY_V22_PX_PER_HOUR*60),start=dayClampV22(proposed,DAY_V22_START,DAY_V22_END-g.duration),end=start+g.duration;mutate('Schedule adjusted',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(end),allDay:false},'day drag');ev.allDay=false;ev.start=toTime(start);ev.end=toTime(end)},`${ev.title} · ${toTime(start)}`)}
+      if(target?.kind==='allDay'){
+        mutate('Item moved to all day',()=>{recordEventMove(ev,g.before,{date:ev.date,start:'',end:'',allDay:true},'day drag');ev.allDay=true;ev.start='';ev.end=''},ev.title)
+      }else if(target?.kind==='time'){
+        const proposed=daySnapV22(g.origStart+(e.clientY-g.startY)/DAY_V22_PX_PER_HOUR*60),
+              start=dayClampV22(proposed,DAY_V22_START,DAY_V22_END-g.duration),
+              end=start+g.duration;
+        mutate('Schedule adjusted',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(end),allDay:false},'day drag');ev.allDay=false;ev.start=toTime(start);ev.end=toTime(end)},`${ev.title} · ${toTime(start)}`)
+      }
     }else if(g.kind==='unscheduled'){
       if(target?.kind==='time'){const start=target.minute,end=Math.min(DAY_V22_END,start+30);mutate('Item scheduled',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(end),allDay:false},'day drag');ev.allDay=false;ev.start=toTime(start);ev.end=toTime(end)},`${ev.title} · ${toTime(start)}`)}
     }else if(g.kind==='resizeTop'){
@@ -4073,10 +4193,112 @@ select option:checked{
     const d=getDay(),w=getWeek(),m=getMonth();$('#paperDate').textContent=selected.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'}).replaceAll('/',' / ');$('#paperWeek').textContent=String(isoWeek(selected)).padStart(2,'0');$('#dayWeekMain').textContent=w.main||w.mission||'—';$('#dayMonthFocus').textContent=m.mission||'—';$('#mainFocus').value=d.focus;$('#dayAar').value=d.aar;d.tasks.forEach((v,i)=>{$(`#task${i+1}`).value=v;$(`#done${i+1}`).checked=d.done[i]});
     const key=dateKey(selected),uns=state.events.filter(x=>x.date===key&&(x.allDay||!x.start));$('#dayUnscheduled').innerHTML=uns.length?uns.map(x=>`<span class="day-chip" data-day-unscheduled="${x.id}" data-edit="${x.id}" title="Drag onto the timeline to schedule"><span class="item-glyph">${typeGlyph(x.type)}</span>${esc(x.title)}</span>`).join(''):'<span class="small muted">No all-day or unscheduled items.</span>';
     const evs=state.events.filter(x=>x.date===key&&!x.allDay&&x.start),nowMin=realToday.getHours()*60+realToday.getMinutes();let html='';
-    for(let h=4;h<=22;h++){const first=`${pad(h)}:00`,second=`${pad(h)}:30`,matches=evs.filter(x=>Math.floor(minutes(x.start)/60)===h),isToday=key===dateKey(realToday)&&nowMin>=h*60&&nowMin<(h+1)*60;html+=`<div class="hour">${pad(h)}00</div><div class="line" data-day-hour="${h}"><button class="half first" data-slot-date="${key}" data-slot-time="${first}"></button><button class="half second" data-slot-date="${key}" data-slot-time="${second}"></button>${isToday?`<div class="day-now" style="top:${Math.round((nowMin-h*60)/60*34)}px"></div>`:''}${matches.map(x=>{const start=minutes(x.start),duration=dayDurationV22(x),top=1+Math.round((start%60)/60*DAY_V22_PX_PER_HOUR),height=Math.max(15,Math.round(duration/60*DAY_V22_PX_PER_HOUR)-2);return `<button class="day-event" data-day-event="${x.id}" data-edit="${x.id}" data-type="${esc(x.type)}" style="top:${top}px;height:${height}px" title="Drag to move · drag top/bottom edge to resize · tap to edit"><span class="day-resize top" data-day-resize="${x.id}" data-edge="top"></span><span class="day-event-label"><span class="item-glyph">${typeGlyph(x.type)}</span>${esc(x.start)} ${esc(x.title)}</span><span class="day-resize bottom" data-day-resize="${x.id}" data-edge="bottom"></span></button>`}).join('')}</div>`}
+    for(let h=4;h<=22;h++){const first=`${pad(h)}:00`,second=`${pad(h)}:30`,matches=evs.filter(x=>Math.floor(minutes(x.start)/60)===h),isToday=key===dateKey(realToday)&&nowMin>=h*60&&nowMin<(h+1)*60;html+=`<div class="hour">${pad(h)}00</div><div class="line" data-day-hour="${h}"><button class="half first" data-slot-date="${key}" data-slot-time="${first}"></button><button class="half second" data-slot-date="${key}" data-slot-time="${second}"></button>${isToday?`<div class="day-now" style="top:${Math.round((nowMin-h*60)/60*34)}px"></div>`:''}${matches.map(x=>{const start=minutes(x.start),duration=dayDurationV22(x),top=1+Math.round((start%60)/60*DAY_V22_PX_PER_HOUR),height=Math.max(15,Math.round(duration/60*DAY_V22_PX_PER_HOUR)-2);return `<button class="day-event" data-day-event="${x.id}" data-edit="${x.id}" data-type="${esc(x.type)}" style="top:${top}px;height:${height}px" title="Drag to move in 30-minute steps · drag top/bottom edge to resize · tap to edit"><span class="day-resize top" data-day-resize="${x.id}" data-edge="top"></span><span class="day-event-label"><span class="item-glyph">${typeGlyph(x.type)}</span>${esc(x.start)} ${esc(x.title)}</span><span class="day-resize bottom" data-day-resize="${x.id}" data-edge="bottom"></span></button>`}).join('')}</div>`}
     $('#daySchedule').innerHTML=html;bindDayInteractionsV22();
     $('#dayFull').classList.toggle('hidden',focusMode);$('#dayFocus').classList.toggle('hidden',!focusMode);$('#focusMain').textContent=d.focus||'No main focus set';
     const todayEvents=state.events.filter(x=>x.date===key&&!x.allDay&&x.start).sort((a,b)=>a.start.localeCompare(b.start)),selNow=key===dateKey(realToday)?nowMin:0,current=todayEvents.find(x=>minutes(x.start)<=selNow&&x.end&&minutes(x.end)>selNow),next=todayEvents.find(x=>minutes(x.start)>=selNow);$('#focusNow').innerHTML=current?`<div class="focus-task"><strong>NOW</strong> · ${esc(current.start)} ${esc(current.title)}</div>${next&&next.id!==current.id?`<div class="focus-task"><strong>NEXT</strong> · ${esc(next.start)} ${esc(next.title)}</div>`:''}`:next?`<div class="focus-task"><strong>NEXT</strong> · ${esc(next.start)} ${esc(next.title)}</div>`:'<div class="empty">Nothing else scheduled.</div>';const top3=d.tasks.slice(0,3).filter(Boolean);$('#focusTasks').innerHTML=top3.length?top3.map((t,i)=>`<div class="focus-task">${d.done[i]?'✓':'□'} ${esc(t)}</div>`).join(''):'<div class="empty">No Top 3 tasks set.</div>'
+  };
+
+
+
+  /* ---------- SOP v24: board creation + shape-safe rendering ---------- */
+  let boardNameMode='new';
+
+  function openBoardNameEditor(mode='new'){
+    boardNameMode=mode;
+    const b=currentBoard();
+    $('#boardNameHeading').textContent=mode==='rename'?'Rename Board':'New Board';
+    $('#boardNameSub').textContent=mode==='rename'
+      ?'Rename this thinking surface without changing its contents.'
+      :'Create a separate thinking surface. You can start blank or add a template afterward.';
+    $('#boardNameInput').value=mode==='rename'?(b?.name||''):'';
+    $('#saveBoardName').textContent=mode==='rename'?'SAVE NAME':'CREATE BOARD';
+    $('#boardNameError').classList.add('hidden');
+    $('#boardNameError').textContent='';
+    $('#boardNameOverlay').classList.remove('hidden');
+    setTimeout(()=>$('#boardNameInput').focus(),0);
+  }
+
+  function closeBoardNameEditor(){
+    $('#boardNameOverlay').classList.add('hidden');
+    $('#boardNameError').classList.add('hidden');
+    $('#boardNameError').textContent='';
+  }
+
+  function saveBoardNameEditor(e){
+    e?.preventDefault?.();
+    const name=$('#boardNameInput').value.trim();
+    if(!name){
+      $('#boardNameError').textContent='Give the board a name.';
+      $('#boardNameError').classList.remove('hidden');
+      $('#boardNameInput').focus();
+      return;
+    }
+    if(boardNameMode==='rename'){
+      const b=currentBoard();
+      if(!b)return;
+      mutate('Whiteboard renamed',()=>{b.name=name},name);
+      closeBoardNameEditor();
+      render();
+      showToast('Board name saved.',true);
+      return;
+    }
+    const b=makeWhiteboard(name);
+    mutate('Whiteboard created',()=>{
+      state.whiteboards.push(b);
+      state.activeWhiteboardId=b.id;
+    },name);
+    boardSelection.clear();
+    boardSelectedEdge=null;
+    boardSelectedGroup=null;
+    boardConnectFrom=null;
+    boardTool='select';
+    closeBoardNameEditor();
+    render();
+    showToast('New board created.',true);
+  }
+
+  $('#newBoardBtn').onclick=()=>openBoardNameEditor('new');
+  $('#renameBoardBtn').onclick=()=>openBoardNameEditor('rename');
+  $('#closeBoardName').onclick=closeBoardNameEditor;
+  $('#cancelBoardName').onclick=closeBoardNameEditor;
+  $('#boardNameForm').onsubmit=saveBoardNameEditor;
+  $('#boardNameOverlay').addEventListener('click',e=>{
+    if(e.target===$('#boardNameOverlay'))closeBoardNameEditor();
+  });
+  $('#boardNameInput').addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      saveBoardNameEditor(e);
+    }
+  });
+
+  const _boardNodeHTMLV24=boardNodeHTML;
+  boardNodeHTML=function(n){
+    if(n.type!=='shape')return _boardNodeHTMLV24(n);
+    const sel=boardSelection.has(n.id)?'selected':'',
+          source=boardConnectFrom===n.id?'connect-source':'',
+          shape=n.shape||'rect',
+          title=n.title||'Concept',
+          body=n.text||'';
+    return `<div class="board-node shape ${esc(shape)} ${sel} ${source}" data-board-node="${esc(n.id)}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px;${boardToneStyle(n.tone)}">
+      <div class="board-shape-content">
+        <div class="board-shape-title">${esc(title)}</div>
+        ${body?`<div class="board-shape-text">${esc(body)}</div>`:''}
+        <div class="board-shape-type">${esc(shape==='ellipse'?'ELLIPSE':'SHAPE')}</div>
+      </div>
+      <button type="button" class="board-node-edit" data-board-edit="${esc(n.id)}" aria-label="Edit whiteboard shape">EDIT</button>
+      <span class="board-resize" data-board-resize="${esc(n.id)}"></span>
+    </div>`;
+  };
+
+  const _closeTopSurfaceV24=closeTopSurface;
+  closeTopSurface=function(){
+    if(!$('#boardNameOverlay').classList.contains('hidden')){
+      closeBoardNameEditor();
+      return true;
+    }
+    return _closeTopSurfaceV24();
   };
 
 
