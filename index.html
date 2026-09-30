@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SOP — Standard Operating Planner v21</title>
+<title>SOP — Standard Operating Planner v22</title>
 <style>
 :root{
   --bg:#171918;--panel:#202321;--card:#282b29;--ink:#F7F5ED;--muted:#A7B39D;
@@ -1187,6 +1187,111 @@ select option:checked{
 }
 </style>
 
+
+<style id="sop-v22-professional-whiteboard-day">
+/* ---------- Whiteboard: professional planning canvas ---------- */
+.board-shell{gap:10px;min-height:calc(100vh - 176px)}
+.board-console{border:1px solid rgba(167,179,157,.22);border-radius:10px;background:linear-gradient(180deg,rgba(35,41,36,.96),rgba(28,33,29,.96));box-shadow:0 12px 34px rgba(0,0,0,.16);overflow:hidden}
+.board-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-bottom:1px solid rgba(167,179,157,.16)}
+.board-identity{display:flex;align-items:center;gap:14px;min-width:0;flex:1}
+.board-title-stack{min-width:0}
+.board-title-stack .eyebrow{margin-bottom:5px;color:var(--sage);letter-spacing:.12em}
+.board-name-row{display:flex;align-items:center;gap:7px;min-width:0}
+.board-name-row select{min-width:220px;max-width:360px;border-color:rgba(167,179,157,.22)!important;background:#1c211d!important;font-weight:700;font-size:13px}
+.board-live-dot{width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px rgba(167,179,157,.08)}
+.board-saved-copy{font:700 7px var(--mono);letter-spacing:.12em;color:var(--muted);white-space:nowrap}
+.board-file-actions,.board-primary-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.board-primary-actions{justify-content:flex-end}
+.board-quiet{background:transparent;border-color:transparent;color:var(--muted)}
+.board-quiet:hover{background:rgba(247,245,237,.025);border-color:rgba(167,179,157,.16);color:var(--ink)}
+.board-toolbar{display:flex;align-items:stretch;gap:0;padding:0;overflow-x:auto;background:rgba(12,15,13,.18);scrollbar-width:thin}
+.board-toolgroup{display:flex;align-items:center;gap:9px;padding:8px 11px;border-right:1px solid rgba(167,179,157,.13);flex:0 0 auto}
+.board-toolgroup:last-child{border-right:0}
+.board-toolgroup-label{font:700 7px/1 var(--mono);letter-spacing:.14em;color:#738071;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
+.board-toolgroup-controls{display:flex;align-items:center;gap:4px}
+.board-toolbar .btn{min-height:31px;padding:6px 8px;border-color:transparent;background:transparent;color:#abb2a8;font-size:8px;letter-spacing:.055em}
+.board-toolbar .btn:hover{border-color:rgba(167,179,157,.18);background:rgba(247,245,237,.025);color:var(--ink)}
+.board-toolbar .btn.active{color:var(--amber);border-color:rgba(255,176,0,.25);background:rgba(255,176,0,.055);box-shadow:inset 0 -1px 0 rgba(255,176,0,.5)}
+.board-toolbar .btn.danger:hover{color:#e1a095;border-color:rgba(217,139,125,.24);background:rgba(217,139,125,.04)}
+.board-tool-icon{display:inline-grid;place-items:center;min-width:13px;color:inherit;font-size:11px;line-height:1}
+.board-view-tools{margin-left:auto}
+.board-zoom-controls{gap:2px;padding:2px;border:1px solid rgba(167,179,157,.12);border-radius:6px;background:rgba(0,0,0,.12)}
+.board-zoom-controls .btn{min-width:30px;padding:5px 7px}
+.board-zoom-readout{min-width:52px!important;color:var(--ink)!important;font-variant-numeric:tabular-nums}
+.board-workspace{position:relative;min-height:720px;height:calc(100vh - 255px);border:1px solid rgba(167,179,157,.22);border-radius:10px;overflow:hidden;background:#141815;box-shadow:inset 0 1px 0 rgba(255,255,255,.018),0 14px 34px rgba(0,0,0,.14)}
+.board-canvas-hint{position:absolute;top:9px;left:50%;transform:translateX(-50%);z-index:24;display:flex;align-items:center;gap:13px;padding:6px 10px;border:1px solid rgba(167,179,157,.14);border-radius:99px;background:rgba(20,24,21,.84);backdrop-filter:blur(8px);color:#7f8a7c;font:600 7px/1 var(--mono);letter-spacing:.06em;pointer-events:none;white-space:nowrap}
+.board-canvas-hint strong{color:#aeb8a9;font-weight:700}
+.board-viewport{background-color:#151916;background-image:radial-gradient(circle at 1px 1px,rgba(167,179,157,.12) 1px,transparent 1.15px),linear-gradient(rgba(167,179,157,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(167,179,157,.028) 1px,transparent 1px);background-size:20px 20px,100px 100px,100px 100px}
+.board-edge{stroke:rgba(151,164,146,.62);stroke-width:1.6}
+.board-edge.selected{stroke:var(--amber);stroke-width:2.4}
+.board-edge-label{font:700 8px var(--mono);letter-spacing:.04em;fill:#aeb5ab;stroke:#151916;stroke-width:5px}
+.board-group{border:1px dashed rgba(142,158,137,.31);border-radius:14px;background:rgba(167,179,157,.012)}
+.board-group.selected{border-color:rgba(255,176,0,.52);background:rgba(255,176,0,.018)}
+.board-group-label{top:-27px;padding:5px 8px;border-color:rgba(167,179,157,.18);border-radius:5px;background:#1d221e;color:#95a091;font-size:8px;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.board-node{border:1px solid rgba(167,179,157,.22);border-radius:10px;background:linear-gradient(180deg,#252a26,#212622);box-shadow:0 7px 22px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025);transition:border-color .12s ease,box-shadow .12s ease,transform .12s ease}
+.board-node:hover{border-color:rgba(167,179,157,.42);box-shadow:0 10px 26px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.035)}
+.board-node.selected{border-color:rgba(255,176,0,.8);box-shadow:0 0 0 2px rgba(255,176,0,.09),0 12px 30px rgba(0,0,0,.30)}
+.board-node.connect-source{border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,176,0,.13),0 12px 30px rgba(0,0,0,.3)}
+.board-node.note{background:linear-gradient(180deg,#2b2b24,#252720);border-color:rgba(255,176,0,.20)}
+.board-node.note::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--amber),rgba(255,176,0,.15));opacity:.72}
+.board-node.text{background:transparent;border-color:transparent;box-shadow:none;border-radius:6px}
+.board-node.text:hover,.board-node.text.selected{background:rgba(31,36,32,.76);border-color:rgba(167,179,157,.18);box-shadow:none}
+.board-node.shape{background:linear-gradient(180deg,rgba(167,179,157,.105),rgba(167,179,157,.045));border-color:rgba(167,179,157,.34)}
+.board-node.chart{background:linear-gradient(180deg,#232924,#1e231f)}
+.board-node-head{min-height:30px;padding:8px 10px 6px;border-bottom:1px solid rgba(167,179,157,.10)}
+.board-node-title{font:700 11px/1.25 var(--sans);letter-spacing:.01em}
+.board-node-type{display:inline-flex;align-items:center;min-height:17px;padding:2px 5px;border:1px solid rgba(167,179,157,.14);border-radius:99px;color:#7f897d;background:rgba(0,0,0,.10);font:700 7px/1 var(--mono);letter-spacing:.10em}
+.board-node-body{padding:9px 10px 13px;color:#c8ccc4;font-size:12px;line-height:1.48}
+.board-node.text .board-node-body{font-size:17px;font-weight:650;line-height:1.3;padding:10px 11px}
+.board-icon-glyph{font-size:31px;margin:8px 0 6px;color:var(--amber);filter:drop-shadow(0 2px 8px rgba(255,176,0,.08))}
+.board-icon-label{font:700 10px/1.2 var(--sans);letter-spacing:.015em}
+.board-resize{width:18px;height:18px;right:2px;bottom:2px;opacity:.25}
+.board-node:hover .board-resize,.board-node.selected .board-resize{opacity:.85}
+.board-node-edit{right:25px!important;bottom:5px!important;padding:4px 6px!important;border-color:rgba(167,179,157,.20)!important;background:rgba(19,23,20,.92)!important;color:#aeb6aa!important;font-size:7px!important}
+.board-node-edit:hover{border-color:rgba(255,176,0,.36)!important;color:var(--amber)!important}
+.board-status,.board-minimap-note{bottom:11px;padding:6px 9px;border-color:rgba(167,179,157,.13);background:rgba(17,21,18,.82);backdrop-filter:blur(8px);font-size:7px;letter-spacing:.07em;color:#778274}
+.board-status{left:11px}.board-minimap-note{right:11px}
+.board-empty-card{max-width:390px;padding:22px 24px;border-color:rgba(167,179,157,.18);background:rgba(23,27,24,.7);box-shadow:0 12px 32px rgba(0,0,0,.16);font-size:12px;line-height:1.55}
+.board-empty-card strong{font-size:17px;margin-bottom:7px;color:#d8dbd4}
+.board-chart{padding:9px 10px 12px}
+.chart-bar-row{grid-template-columns:58px 1fr 31px;gap:7px;font-size:7px}
+.chart-bar-track{height:6px;background:rgba(247,245,237,.055)}
+.chart-bar-fill,.chart-progress-fill{background:linear-gradient(90deg,#9c7620,var(--amber))}
+.chart-donut::after{background:#222823}
+.board-template-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.board-template-card{padding:14px;border-color:rgba(167,179,157,.18);border-radius:9px;background:linear-gradient(180deg,rgba(247,245,237,.018),rgba(247,245,237,.008))}
+.board-template-card:hover{transform:translateY(-1px);border-color:rgba(255,176,0,.34);background:rgba(255,176,0,.02)}
+.board-template-card strong{font-size:13px}.board-template-card span{font-size:11px;line-height:1.5}
+
+/* ---------- Day: direct manipulation scheduling ---------- */
+.day-left .section-title{margin-bottom:5px}
+.day-left .section-title::after{content:" · DRAG TO MOVE · EDGE-DRAG TO RESIZE";color:#857b5e;font:600 7px var(--mono);letter-spacing:.05em}
+.day-event{z-index:9;cursor:grab;touch-action:none;user-select:none;min-height:15px;overflow:visible;padding:2px 7px;line-height:12px;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+.day-event:active{cursor:grabbing}
+.day-event.dragging{opacity:.72;outline:2px solid rgba(155,115,0,.55);outline-offset:1px;box-shadow:0 8px 20px rgba(0,0,0,.19)}
+.day-event-label{display:block;height:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;pointer-events:none}
+.day-resize{position:absolute;left:0;right:0;height:10px;z-index:12;cursor:ns-resize;touch-action:none}
+.day-resize.top{top:-4px}.day-resize.bottom{bottom:-4px}
+.day-resize::after{content:"";position:absolute;left:50%;width:23px;height:2px;transform:translateX(-50%);border-radius:99px;background:rgba(155,115,0,.58);opacity:0}
+.day-resize.top::after{top:4px}.day-resize.bottom::after{bottom:4px}
+.day-event:hover .day-resize::after,.day-event.dragging .day-resize::after{opacity:1}
+.day-chip[data-day-unscheduled]{cursor:grab;touch-action:none;user-select:none}
+.day-chip[data-day-unscheduled].dragging{opacity:.52;outline:1px solid #9b7300}
+.day-drop-target{background:rgba(155,115,0,.075)!important;outline:1px solid rgba(155,115,0,.32);outline-offset:-1px}
+.unscheduled-items.day-drop-target{background:rgba(155,115,0,.055)!important}
+.day-drag-tip{position:fixed;z-index:180;pointer-events:none;padding:5px 7px;border:1px solid rgba(155,115,0,.42);border-radius:5px;background:#f0ede4;color:#39362d;box-shadow:0 8px 20px rgba(0,0,0,.15);font:700 8px/1.2 var(--mono);letter-spacing:.03em}
+.line{overflow:visible}
+@media(max-width:960px){
+  .board-head{align-items:flex-start;flex-direction:column}.board-primary-actions{width:100%;justify-content:flex-start}.board-file-actions{gap:3px}.board-toolgroup-label{display:none}.board-toolgroup{padding:7px 7px}.board-workspace{height:calc(100vh - 290px);min-height:560px}.board-canvas-hint{display:none}
+}
+@media(max-width:620px){
+  .board-name-row select{min-width:150px;max-width:220px}.board-saved-copy{display:none}.board-toolbar .btn{min-height:39px;padding:7px 9px}.board-tool-icon{font-size:12px}.board-workspace{min-height:500px}.board-status,.board-minimap-note{font-size:6px}
+}
+@media(pointer:coarse){
+  .day-event{min-height:20px;padding-top:4px;padding-bottom:4px}.day-resize{height:16px}.day-resize.top{top:-6px}.day-resize.bottom{bottom:-6px}.day-resize::after{opacity:.62;width:30px;height:3px}.day-chip[data-day-unscheduled]{min-height:30px;display:inline-flex;align-items:center}
+}
+</style>
+
 </head>
 <body>
 <div class="app" id="app">
@@ -1456,20 +1561,23 @@ select option:checked{
   <!-- WHITEBOARD -->
   <section id="boardView" class="hidden">
     <div class="board-shell">
-      <div class="panel board-head">
-        <div class="board-identity"><div><div class="eyebrow">Planning Whiteboard</div><select id="boardSelect" aria-label="Whiteboard"></select></div><button class="btn" id="newBoardBtn">+ BOARD</button><button class="btn" id="renameBoardBtn">RENAME</button><button class="btn danger" id="deleteBoardBtn">DELETE</button></div>
-        <div class="row" style="justify-content:flex-end"><button class="btn primary" id="boardTemplatesBtn">PLANNING TEMPLATES</button><button class="btn" id="boardFitBtn">FIT</button></div>
-      </div>
-      <div class="board-toolbar" id="boardToolbar">
-        <button class="btn active" data-board-tool="select">SELECT</button><button class="btn" data-board-tool="pan">PAN</button><button class="btn" id="boardMultiBtn">MULTI</button>
-        <span class="divider"></span>
-        <button class="btn" data-board-add="note">+ NOTE</button><button class="btn" data-board-add="text">+ TEXT</button><button class="btn" data-board-add="shape">+ SHAPE</button><button class="btn" data-board-add="icon">+ ICON</button><button class="btn" data-board-add="chart">+ CHART</button>
-        <span class="divider"></span>
-        <button class="btn" data-board-tool="connect">CONNECT</button><button class="btn" id="boardGroupBtn">GROUP</button><button class="btn" id="boardUngroupBtn">UNGROUP</button><button class="btn" id="boardDuplicateBtn">DUPLICATE</button><button class="btn danger" id="boardDeleteBtn">DELETE</button>
-        <span class="divider"></span>
-        <button class="btn" id="boardZoomOut">−</button><button class="btn" id="boardZoomReset">100%</button><button class="btn" id="boardZoomIn">+</button>
+      <div class="board-console">
+        <div class="board-head">
+          <div class="board-identity">
+            <div class="board-title-stack"><div class="eyebrow">Planning Whiteboard</div><div class="board-name-row"><select id="boardSelect" aria-label="Whiteboard"></select><span class="board-live-dot" aria-hidden="true"></span><span class="board-saved-copy">LOCAL WORKSPACE</span></div></div>
+            <div class="board-file-actions"><button class="btn board-quiet" id="newBoardBtn">+ NEW BOARD</button><button class="btn board-quiet" id="renameBoardBtn">RENAME</button><button class="btn danger board-quiet" id="deleteBoardBtn">DELETE</button></div>
+          </div>
+          <div class="board-primary-actions"><button class="btn primary" id="boardTemplatesBtn">TEMPLATES</button><button class="btn" id="boardFitBtn">FIT BOARD</button></div>
+        </div>
+        <div class="board-toolbar" id="boardToolbar">
+          <div class="board-toolgroup"><span class="board-toolgroup-label">NAVIGATE</span><div class="board-toolgroup-controls"><button class="btn active" data-board-tool="select"><span class="board-tool-icon">↖</span> SELECT</button><button class="btn" data-board-tool="pan"><span class="board-tool-icon">✥</span> PAN</button><button class="btn" id="boardMultiBtn"><span class="board-tool-icon">▦</span> MULTI</button></div></div>
+          <div class="board-toolgroup"><span class="board-toolgroup-label">ADD</span><div class="board-toolgroup-controls"><button class="btn" data-board-add="note"><span class="board-tool-icon">▤</span> NOTE</button><button class="btn" data-board-add="text"><span class="board-tool-icon">T</span> TEXT</button><button class="btn" data-board-add="shape"><span class="board-tool-icon">◇</span> SHAPE</button><button class="btn" data-board-add="icon"><span class="board-tool-icon">◆</span> ICON</button><button class="btn" data-board-add="chart"><span class="board-tool-icon">▥</span> CHART</button></div></div>
+          <div class="board-toolgroup"><span class="board-toolgroup-label">ORGANIZE</span><div class="board-toolgroup-controls"><button class="btn" data-board-tool="connect"><span class="board-tool-icon">↗</span> CONNECT</button><button class="btn" id="boardGroupBtn">GROUP</button><button class="btn" id="boardUngroupBtn">UNGROUP</button><button class="btn" id="boardDuplicateBtn">DUPLICATE</button><button class="btn danger" id="boardDeleteBtn">DELETE</button></div></div>
+          <div class="board-toolgroup board-view-tools"><span class="board-toolgroup-label">VIEW</span><div class="board-toolgroup-controls board-zoom-controls"><button class="btn" id="boardZoomOut" aria-label="Zoom out">−</button><button class="btn board-zoom-readout" id="boardZoomReset">100%</button><button class="btn" id="boardZoomIn" aria-label="Zoom in">+</button></div></div>
+        </div>
       </div>
       <div class="board-workspace">
+        <div class="board-canvas-hint"><span><strong>DRAG</strong> move</span><span><strong>DOUBLE TAP</strong> edit</span><span><strong>CONNECT</strong> link ideas</span><span><strong>SHIFT / MULTI</strong> select many</span></div>
         <div id="whiteboardViewport" class="board-viewport tool-select">
           <div id="whiteboardStage" class="board-stage">
             <svg id="whiteboardEdges" class="board-edges" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 z" fill="rgba(167,179,157,.7)"/></marker></defs><g id="whiteboardEdgePaths"></g></svg>
@@ -1478,7 +1586,7 @@ select option:checked{
           </div>
           <div id="boardEmpty" class="board-empty hidden"><div class="board-empty-card"><strong>Blank planning surface</strong>Start with a note, shape, chart, or a planning template. Pan anywhere and zoom as the thinking expands.</div></div>
           <div id="boardStatus" class="board-status">SELECT · 100%</div>
-          <div class="board-minimap-note">DOUBLE TAP / DOUBLE CLICK TO EDIT · SHIFT OR MULTI FOR GROUP SELECTION</div>
+          <div class="board-minimap-note">INFINITE CANVAS · PINCH / WHEEL TO ZOOM</div>
         </div>
       </div>
     </div>
@@ -3883,6 +3991,93 @@ select option:checked{
   /* Keep mobile taps away from overlapping input/header hit areas. */
   $('#trayAdd').addEventListener('pointerdown',e=>e.stopPropagation());
   $('#trayInput').addEventListener('focus',()=>$('#taskTray')?.scrollIntoView({block:'nearest'}));
+
+
+
+  /* ---------- SOP v22: refined whiteboard + day direct manipulation ---------- */
+  const _boardDefaultNodeV22=boardDefaultNode;
+  boardDefaultNode=function(type,x,y){
+    const n=_boardDefaultNodeV22(type,x,y);
+    if(type==='note'){n.w=Math.max(n.w,240);n.h=Math.max(n.h,145)}
+    if(type==='text'){n.w=Math.max(n.w,240);n.h=Math.max(n.h,76)}
+    if(type==='shape'){n.w=Math.max(n.w,205);n.h=Math.max(n.h,108)}
+    if(type==='chart'){n.w=Math.max(n.w,285);n.h=Math.max(n.h,190)}
+    return n
+  };
+  boardFit=function(){
+    const b=currentBoard(),r=boardViewportRect();
+    if(!b.nodes.length){b.viewport={x:r.width/2,y:r.height/2,scale:1};save(false);applyBoardTransform();return}
+    const minX=Math.min(...b.nodes.map(n=>n.x)),minY=Math.min(...b.nodes.map(n=>n.y)),maxX=Math.max(...b.nodes.map(n=>n.x+n.w)),maxY=Math.max(...b.nodes.map(n=>n.y+n.h)),w=Math.max(100,maxX-minX),h=Math.max(100,maxY-minY),pad=58;
+    const scale=Math.max(.32,Math.min(1.45,Math.min((r.width-pad*2)/w,(r.height-pad*2)/h)));
+    b.viewport.scale=scale;b.viewport.x=(r.width-w*scale)/2-minX*scale;b.viewport.y=(r.height-h*scale)/2-minY*scale;save(false);renderBoard()
+  };
+
+  const DAY_V22_START=4*60,DAY_V22_END=23*60,DAY_V22_STEP=15,DAY_V22_PX_PER_HOUR=34;
+  let dayGestureV22=null;
+  function dayDurationV22(ev){return ev?.start&&ev?.end?Math.max(DAY_V22_STEP,minutes(ev.end)-minutes(ev.start)):30}
+  function daySnapV22(m){return Math.round(m/DAY_V22_STEP)*DAY_V22_STEP}
+  function dayClampV22(v,min,max){return Math.max(min,Math.min(max,v))}
+  function dayPointerTargetV22(x,y){
+    const all=$('#dayUnscheduled');if(all){const r=all.getBoundingClientRect();if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return {kind:'allDay',el:all}}
+    for(const line of $$('#daySchedule .line[data-day-hour]')){const r=line.getBoundingClientRect();if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){const hour=Number(line.dataset.dayHour),ratio=dayClampV22((y-r.top)/Math.max(1,r.height),0,.999),minute=dayClampV22(daySnapV22(hour*60+ratio*60),DAY_V22_START,DAY_V22_END-DAY_V22_STEP);return {kind:'time',el:line,minute}}}
+    return null
+  }
+  function clearDayDropV22(){$$('.day-drop-target').forEach(x=>x.classList.remove('day-drop-target'))}
+  function updateDayTipV22(g,x,y){
+    if(!g.tip){g.tip=document.createElement('div');g.tip.className='day-drag-tip';document.body.appendChild(g.tip)}
+    g.tip.style.left=Math.min(window.innerWidth-170,x+13)+'px';g.tip.style.top=Math.max(6,Math.min(window.innerHeight-40,y+13))+'px';
+    let label='';if(g.kind==='move'){const m=dayClampV22(daySnapV22(g.origStart+(y-g.startY)/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,DAY_V22_END-g.duration);label=`MOVE · ${toTime(m)}–${toTime(m+g.duration)}`}
+    else if(g.kind==='resizeTop'){const m=dayClampV22(daySnapV22(g.origStart+(y-g.startY)/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,g.origEnd-DAY_V22_STEP);label=`START · ${toTime(m)}`}
+    else if(g.kind==='resizeBottom'){const m=dayClampV22(daySnapV22(g.origEnd+(y-g.startY)/DAY_V22_PX_PER_HOUR*60),g.origStart+DAY_V22_STEP,DAY_V22_END);label=`END · ${toTime(m)}`}
+    else if(g.kind==='unscheduled'){const t=dayPointerTargetV22(x,y);label=t?.kind==='time'?`SCHEDULE · ${toTime(t.minute)}`:'DRAG TO A TIME'}
+    g.tip.textContent=label
+  }
+  function bindDayInteractionsV22(){
+    $$('#daySchedule [data-day-event]').forEach(el=>{
+      el.addEventListener('pointerdown',e=>{
+        if(e.target.closest('[data-day-resize]'))return;const ev=state.events.find(x=>x.id===Number(el.dataset.dayEvent));if(!ev||!ev.start)return;
+        e.stopPropagation();const duration=dayDurationV22(ev);dayGestureV22={kind:'move',pointerId:e.pointerId,id:ev.id,el,startX:e.clientX,startY:e.clientY,origStart:minutes(ev.start),origEnd:minutes(ev.end||toTime(minutes(ev.start)+duration)),duration,moved:false,before:{date:ev.date,start:ev.start,end:ev.end,allDay:ev.allDay}};el.setPointerCapture?.(e.pointerId)
+      })
+    });
+    $$('#daySchedule [data-day-resize]').forEach(h=>h.addEventListener('pointerdown',e=>{
+      e.preventDefault();e.stopPropagation();const ev=state.events.find(x=>x.id===Number(h.dataset.dayResize));if(!ev||!ev.start)return;const end=ev.end?minutes(ev.end):minutes(ev.start)+30;const el=h.closest('[data-day-event]');dayGestureV22={kind:h.dataset.edge==='top'?'resizeTop':'resizeBottom',pointerId:e.pointerId,id:ev.id,el,startX:e.clientX,startY:e.clientY,origStart:minutes(ev.start),origEnd:end,duration:end-minutes(ev.start),moved:false,before:{date:ev.date,start:ev.start,end:ev.end,allDay:ev.allDay}};h.setPointerCapture?.(e.pointerId)
+    }));
+    $$('#dayUnscheduled [data-day-unscheduled]').forEach(el=>el.addEventListener('pointerdown',e=>{const ev=state.events.find(x=>x.id===Number(el.dataset.dayUnscheduled));if(!ev)return;e.stopPropagation();dayGestureV22={kind:'unscheduled',pointerId:e.pointerId,id:ev.id,el,startX:e.clientX,startY:e.clientY,moved:false,before:{date:ev.date,start:ev.start,end:ev.end,allDay:ev.allDay}};el.setPointerCapture?.(e.pointerId)}))
+  }
+  window.addEventListener('pointermove',e=>{
+    const g=dayGestureV22;if(!g||g.pointerId!==e.pointerId)return;const dx=e.clientX-g.startX,dy=e.clientY-g.startY;if(!g.moved&&Math.hypot(dx,dy)<4)return;g.moved=true;g.el?.classList.add('dragging');clearDayDropV22();const target=dayPointerTargetV22(e.clientX,e.clientY);if(target?.el)target.el.classList.add('day-drop-target');
+    if(g.kind==='move')g.el.style.transform=`translateY(${dy}px)`;
+    else if(g.kind==='resizeBottom'){const h=Math.max(15,(g.duration+dy/DAY_V22_PX_PER_HOUR*60)/60*DAY_V22_PX_PER_HOUR-2);g.el.style.height=h+'px'}
+    else if(g.kind==='resizeTop'){const newStart=dayClampV22(daySnapV22(g.origStart+dy/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,g.origEnd-DAY_V22_STEP),delta=(newStart-g.origStart)/60*DAY_V22_PX_PER_HOUR;g.el.style.transform=`translateY(${delta}px)`;g.el.style.height=Math.max(15,(g.origEnd-newStart)/60*DAY_V22_PX_PER_HOUR-2)+'px'}
+    updateDayTipV22(g,e.clientX,e.clientY)
+  },true);
+  function finishDayGestureV22(e){
+    const g=dayGestureV22;if(!g||g.pointerId!==e.pointerId)return;dayGestureV22=null;clearDayDropV22();g.tip?.remove();g.el?.classList.remove('dragging');if(g.el){g.el.style.transform='';g.el.style.height=''}if(!g.moved)return;suppressClickUntil=Date.now()+400;
+    const ev=state.events.find(x=>x.id===g.id);if(!ev)return;const target=dayPointerTargetV22(e.clientX,e.clientY);
+    if(g.kind==='move'){
+      if(target?.kind==='allDay'){mutate('Item moved to all day',()=>{recordEventMove(ev,g.before,{date:ev.date,start:'',end:'',allDay:true},'day drag');ev.allDay=true;ev.start='';ev.end=''},ev.title)}
+      else{const proposed=target?.kind==='time'?target.minute:daySnapV22(g.origStart+(e.clientY-g.startY)/DAY_V22_PX_PER_HOUR*60),start=dayClampV22(proposed,DAY_V22_START,DAY_V22_END-g.duration),end=start+g.duration;mutate('Schedule adjusted',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(end),allDay:false},'day drag');ev.allDay=false;ev.start=toTime(start);ev.end=toTime(end)},`${ev.title} · ${toTime(start)}`)}
+    }else if(g.kind==='unscheduled'){
+      if(target?.kind==='time'){const start=target.minute,end=Math.min(DAY_V22_END,start+30);mutate('Item scheduled',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(end),allDay:false},'day drag');ev.allDay=false;ev.start=toTime(start);ev.end=toTime(end)},`${ev.title} · ${toTime(start)}`)}
+    }else if(g.kind==='resizeTop'){
+      const start=dayClampV22(daySnapV22(g.origStart+(e.clientY-g.startY)/DAY_V22_PX_PER_HOUR*60),DAY_V22_START,g.origEnd-DAY_V22_STEP);mutate('Start time adjusted',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(start),end:toTime(g.origEnd),allDay:false},'day resize');ev.start=toTime(start);ev.end=toTime(g.origEnd)},`${ev.title} · ${toTime(start)}`)
+    }else if(g.kind==='resizeBottom'){
+      const end=dayClampV22(daySnapV22(g.origEnd+(e.clientY-g.startY)/DAY_V22_PX_PER_HOUR*60),g.origStart+DAY_V22_STEP,DAY_V22_END);mutate('End time adjusted',()=>{recordEventMove(ev,g.before,{date:ev.date,start:toTime(g.origStart),end:toTime(end),allDay:false},'day resize');ev.start=toTime(g.origStart);ev.end=toTime(end)},`${ev.title} · ${toTime(end)}`)
+    }
+    render()
+  }
+  window.addEventListener('pointerup',finishDayGestureV22,true);window.addEventListener('pointercancel',e=>{if(dayGestureV22?.pointerId===e.pointerId){dayGestureV22.tip?.remove();dayGestureV22=null;clearDayDropV22();render()}},true);
+
+  const _renderDayV22=renderDay;
+  renderDay=function(){
+    const d=getDay(),w=getWeek(),m=getMonth();$('#paperDate').textContent=selected.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'numeric'}).replaceAll('/',' / ');$('#paperWeek').textContent=String(isoWeek(selected)).padStart(2,'0');$('#dayWeekMain').textContent=w.main||w.mission||'—';$('#dayMonthFocus').textContent=m.mission||'—';$('#mainFocus').value=d.focus;$('#dayAar').value=d.aar;d.tasks.forEach((v,i)=>{$(`#task${i+1}`).value=v;$(`#done${i+1}`).checked=d.done[i]});
+    const key=dateKey(selected),uns=state.events.filter(x=>x.date===key&&(x.allDay||!x.start));$('#dayUnscheduled').innerHTML=uns.length?uns.map(x=>`<span class="day-chip" data-day-unscheduled="${x.id}" data-edit="${x.id}" title="Drag onto the timeline to schedule"><span class="item-glyph">${typeGlyph(x.type)}</span>${esc(x.title)}</span>`).join(''):'<span class="small muted">No all-day or unscheduled items.</span>';
+    const evs=state.events.filter(x=>x.date===key&&!x.allDay&&x.start),nowMin=realToday.getHours()*60+realToday.getMinutes();let html='';
+    for(let h=4;h<=22;h++){const first=`${pad(h)}:00`,second=`${pad(h)}:30`,matches=evs.filter(x=>Math.floor(minutes(x.start)/60)===h),isToday=key===dateKey(realToday)&&nowMin>=h*60&&nowMin<(h+1)*60;html+=`<div class="hour">${pad(h)}00</div><div class="line" data-day-hour="${h}"><button class="half first" data-slot-date="${key}" data-slot-time="${first}"></button><button class="half second" data-slot-date="${key}" data-slot-time="${second}"></button>${isToday?`<div class="day-now" style="top:${Math.round((nowMin-h*60)/60*34)}px"></div>`:''}${matches.map(x=>{const start=minutes(x.start),duration=dayDurationV22(x),top=1+Math.round((start%60)/60*DAY_V22_PX_PER_HOUR),height=Math.max(15,Math.round(duration/60*DAY_V22_PX_PER_HOUR)-2);return `<button class="day-event" data-day-event="${x.id}" data-edit="${x.id}" data-type="${esc(x.type)}" style="top:${top}px;height:${height}px" title="Drag to move · drag top/bottom edge to resize · tap to edit"><span class="day-resize top" data-day-resize="${x.id}" data-edge="top"></span><span class="day-event-label"><span class="item-glyph">${typeGlyph(x.type)}</span>${esc(x.start)} ${esc(x.title)}</span><span class="day-resize bottom" data-day-resize="${x.id}" data-edge="bottom"></span></button>`}).join('')}</div>`}
+    $('#daySchedule').innerHTML=html;bindDayInteractionsV22();
+    $('#dayFull').classList.toggle('hidden',focusMode);$('#dayFocus').classList.toggle('hidden',!focusMode);$('#focusMain').textContent=d.focus||'No main focus set';
+    const todayEvents=state.events.filter(x=>x.date===key&&!x.allDay&&x.start).sort((a,b)=>a.start.localeCompare(b.start)),selNow=key===dateKey(realToday)?nowMin:0,current=todayEvents.find(x=>minutes(x.start)<=selNow&&x.end&&minutes(x.end)>selNow),next=todayEvents.find(x=>minutes(x.start)>=selNow);$('#focusNow').innerHTML=current?`<div class="focus-task"><strong>NOW</strong> · ${esc(current.start)} ${esc(current.title)}</div>${next&&next.id!==current.id?`<div class="focus-task"><strong>NEXT</strong> · ${esc(next.start)} ${esc(next.title)}</div>`:''}`:next?`<div class="focus-task"><strong>NEXT</strong> · ${esc(next.start)} ${esc(next.title)}</div>`:'<div class="empty">Nothing else scheduled.</div>';const top3=d.tasks.slice(0,3).filter(Boolean);$('#focusTasks').innerHTML=top3.length?top3.map((t,i)=>`<div class="focus-task">${d.done[i]?'✓':'□'} ${esc(t)}</div>`).join(''):'<div class="empty">No Top 3 tasks set.</div>'
+  };
 
 
   load();runDueSops();render();
