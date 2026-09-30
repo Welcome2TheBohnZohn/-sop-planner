@@ -1,8 +1,8 @@
-import type { SVGProps } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 
 export type IconName = 'home' | 'target' | 'calendar' | 'week' | 'day' | 'tasks' | 'board' | 'search' | 'inbox' | 'plus' | 'more' | 'left' | 'right' | 'check' | 'edit' | 'trash' | 'clock' | 'template' | 'settings' | 'export' | 'import' | 'history' | 'save' | 'x' | 'note' | 'text' | 'shape' | 'chart' | 'connect' | 'hand' | 'cursor' | 'group' | 'duplicate' | 'fit' | 'menu' | 'archive'
 
-const paths: Record<IconName, React.ReactNode> = {
+const paths: Record<IconName, ReactNode> = {
   home: <><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M9.5 20v-6h5v6"/></>,
   target: <><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M22 12h-3M12 22v-3M2 12h3"/></>,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 9h18"/><path d="M7 13h3M14 13h3M7 17h3"/></>,
