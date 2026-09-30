@@ -61,7 +61,7 @@ export function blankWeek(): WeekPlan {
 }
 
 export function blankDay(): DayPlan {
-  return { focus: '', top3: ['', '', ''], other: [], worked: '', friction: '', carry: '' }
+  return { focus: '', top3: ['', '', ''], top3Done:[false,false,false], other: [], otherDone:[], worked: '', friction: '', carry: '' }
 }
 
 export function initialBoard(): Whiteboard {
