@@ -16,9 +16,15 @@ export function AppShell({children,view,navigate,openInbox,openSearch,openSchedu
   const [settingsOpen,setSettingsOpen]=useState(false)
   const fileRef=useRef<HTMLInputElement>(null)
   const inboxCount=state.inbox.filter(i=>i.status==='inbox').length
-  const period=view==='quarter'?quarterKey(state.selectedDate):view==='month'?formatDay(`${monthKey(state.selectedDate)}-01`,{month:'long',year:'numeric'}):view==='week'?`Week of ${formatDay(startOfWeek(state.selectedDate),{month:'short',day:'numeric',year:'numeric'})}`:formatDay(state.selectedDate,{weekday:'short',month:'long',day:'numeric',year:'numeric'})
+  const period=view==='home'?formatDay(todayKey(),{weekday:'short',month:'long',day:'numeric',year:'numeric'}):view==='quarter'?quarterKey(state.selectedDate):view==='month'?formatDay(`${monthKey(state.selectedDate)}-01`,{month:'long',year:'numeric'}):view==='week'?`Week of ${formatDay(startOfWeek(state.selectedDate),{month:'short',day:'numeric',year:'numeric'})}`:formatDay(state.selectedDate,{weekday:'short',month:'long',day:'numeric',year:'numeric'})
 
   function movePeriod(direction:number){
+    if(view==='home'){
+      const next=addDays(todayKey(),direction)
+      mutate('Date selected',next,d=>{d.selectedDate=next})
+      navigate('day')
+      return
+    }
     let next=state.selectedDate
     if(view==='quarter'){const d=fromKey(next);d.setMonth(d.getMonth()+direction*3);next=dateKey(d)}
     else if(view==='month'){const d=fromKey(next);d.setMonth(d.getMonth()+direction);next=dateKey(d)}
