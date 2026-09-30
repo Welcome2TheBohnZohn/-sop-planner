@@ -84,7 +84,7 @@ export function QuarterView() {
         <button className="goal-label-card" onClick={()=>editGoal(gi)}><span>{String(gi+1).padStart(2,'0')}</span><div><strong>{g.title||`Primary Goal ${gi+1}`}</strong><small>{g.status}</small></div><Icon name="edit"/></button>
         <div className="quarter-lane">
           {weeks.map((w,wi)=><button className="quarter-week-hit" aria-label={`Add milestone week ${wi+1}`} onClick={()=>openMilestone(g,w)} key={w}></button>)}
-          <button className="goal-bar" style={goalSpan(g)} onClick={e=>{e.stopPropagation();editGoal(gi)}}><span>{g.title||'Define goal'}</span></button>
+          <button className="goal-bar" style={goalSpan(g)} title="Click a week on the bar to add a milestone" onClick={e=>{e.stopPropagation();const lane=e.currentTarget.parentElement?.getBoundingClientRect();if(!lane)return;const x=Math.max(0,Math.min(lane.width-1,e.clientX-lane.left));const wi=Math.max(0,Math.min(12,Math.floor(x/(lane.width/13))));openMilestone(g,weeks[wi])}}><span>{g.title||'Define goal'}</span></button>
           {plan.milestones.filter(m=>m.goalId===g.id).map(m=>{const idx=Math.max(0,Math.min(12,weeks.findIndex(w=>m.date>=w&&m.date<addDays(w,7))));return <button className={`milestone-marker type-${m.type.toLowerCase().replaceAll(' ','-')}`} style={{left:`${(idx+.5)/13*100}%`}} key={m.id} title={`${m.type}: ${m.title}`} onClick={()=>setMilestoneDraft(structuredClone(m))}><span>{m.type==='Deadline'?'▲':m.type==='Decision Point'?'◇':'◆'}</span><em>{m.title}</em></button>})}
         </div>
       </div>)}
