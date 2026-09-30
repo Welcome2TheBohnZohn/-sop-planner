@@ -4,7 +4,7 @@ import { Modal } from '../components/Modal'
 import { usePlanner } from '../state/PlannerContext'
 import { blankQuarter } from '../state/defaults'
 import type { Goal, QuarterMilestone } from '../types'
-import { addDays, formatDay, quarterKey, quarterWeeks, startOfWeek } from '../utils/date'
+import { addDays, formatDay, fromKey, quarterKey, quarterWeeks, startOfWeek } from '../utils/date'
 
 const STATUSES: Goal['status'][] = ['Not Started','On Track','At Risk','Blocked','Complete']
 
@@ -38,8 +38,8 @@ export function QuarterView() {
   function goalSpan(g:Goal){
     const start = g.startDate || weeks[0]
     const end = g.endDate || g.targetDate || addDays(weeks[0],84)
-    const startIdx = Math.max(0, Math.min(12, Math.floor((new Date(start).getTime()-new Date(weekStart).getTime())/604800000)))
-    const endIdx = Math.max(startIdx, Math.min(12, Math.floor((new Date(end).getTime()-new Date(weekStart).getTime())/604800000)))
+    const startIdx = Math.max(0, Math.min(12, Math.floor((fromKey(start).getTime()-fromKey(weekStart).getTime())/604800000)))
+    const endIdx = Math.max(startIdx, Math.min(12, Math.floor((fromKey(end).getTime()-fromKey(weekStart).getTime())/604800000)))
     return {left:`${startIdx/13*100}%`,width:`${(endIdx-startIdx+1)/13*100}%`}
   }
   const quarterLabel = useMemo(()=>key.replace('-',' · '),[key])
