@@ -1,11 +1,12 @@
 import type { AppView } from '../types'
 import { usePlanner } from '../state/PlannerContext'
-import { formatDay, startOfWeek } from '../utils/date'
+import { formatDay, startOfWeek, todayKey } from '../utils/date'
 import { Icon } from '../components/Icon'
 
 export function HomeView({ navigate }: { navigate: (view: AppView) => void }) {
-  const { state, week, quarter } = usePlanner()
-  const today = state.selectedDate
+  const { state, week, quarter, mutate } = usePlanner()
+  const today = todayKey()
+  const openToday = (view: AppView) => { mutate('Today selected',today,d=>{d.selectedDate=today}); navigate(view) }
   const todayEvents = state.events.filter(e => e.date === today && !e.completed).sort((a,b) => a.start.localeCompare(b.start))
   const w = week(today)
   const q = quarter(today)
@@ -15,13 +16,13 @@ export function HomeView({ navigate }: { navigate: (view: AppView) => void }) {
   return <div className="view-stack">
     <section className="hero-panel">
       <div><div className="eyebrow">Today · {formatDay(today, { weekday:'long', month:'long', day:'numeric' })}</div><h1>{state.dayPlans[today]?.focus || 'Decide what matters today.'}</h1></div>
-      <button className="button primary" onClick={() => navigate('day')}><Icon name="day" />Open Day</button>
+      <button className="button primary" onClick={() => openToday('day')}><Icon name="day" />Open Day</button>
     </section>
     <div className="home-grid">
       <button className="insight-card" onClick={() => navigate('day')}><span className="eyebrow">Next scheduled</span><strong>{todayEvents[0] ? `${todayEvents[0].start || 'All day'} · ${todayEvents[0].title}` : 'Nothing scheduled'}</strong><small>Open today’s execution view</small></button>
-      <button className="insight-card" onClick={() => navigate('week')}><span className="eyebrow">Week / Main Effort</span><strong>{w.main || 'Set this week’s main effort'}</strong><small>Week of {formatDay(startOfWeek(today), { month:'short', day:'numeric' })}</small></button>
-      <button className="insight-card" onClick={() => navigate('quarter')}><span className="eyebrow">Next milestone</span><strong>{nextMilestone?.title || 'No milestone scheduled'}</strong><small>{nextMilestone ? formatDay(nextMilestone.date, { month:'short', day:'numeric' }) : 'Quarter map'}</small></button>
-      <button className="insight-card" onClick={() => navigate('tasks')}><span className="eyebrow">Open tasking</span><strong>{state.todos.filter(t => !t.done).length} open</strong><small>{state.todos.filter(t => t.due === today && !t.done).length} due today</small></button>
+      <button className="insight-card" onClick={() => openToday('week')}><span className="eyebrow">Week / Main Effort</span><strong>{w.main || 'Set this week’s main effort'}</strong><small>Week of {formatDay(startOfWeek(today), { month:'short', day:'numeric' })}</small></button>
+      <button className="insight-card" onClick={() => openToday('quarter')}><span className="eyebrow">Next milestone</span><strong>{nextMilestone?.title || 'No milestone scheduled'}</strong><small>{nextMilestone ? formatDay(nextMilestone.date, { month:'short', day:'numeric' }) : 'Quarter map'}</small></button>
+      <button className="insight-card" onClick={() => openToday('tasks')}><span className="eyebrow">Open tasking</span><strong>{state.todos.filter(t => !t.done).length} open</strong><small>{state.todos.filter(t => t.due === today && !t.done).length} due today</small></button>
     </div>
     <div className="two-col">
       <section className="panel">
