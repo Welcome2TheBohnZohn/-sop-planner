@@ -1,0 +1,11 @@
+import { useMemo, useState } from 'react'
+import { Icon } from './Icon'
+import { usePlanner } from '../state/PlannerContext'
+import type { AppView } from '../types'
+
+export function SearchPalette({open,onClose,navigate}:{open:boolean;onClose:()=>void;navigate:(v:AppView)=>void}){
+  const {state,mutate}=usePlanner();const [q,setQ]=useState('')
+  const results=useMemo(()=>{const term=q.trim().toLowerCase();if(!term)return[];const out:Array<{title:string;meta:string;view:AppView;date?:string}>=[];state.events.forEach(e=>{if(`${e.title} ${e.context} ${e.domain}`.toLowerCase().includes(term))out.push({title:e.title,meta:`${e.type} · ${e.date} ${e.start}`,view:'day',date:e.date})});state.todos.forEach(t=>{if(`${t.title} ${t.notes}`.toLowerCase().includes(term))out.push({title:t.title,meta:'Task',view:'tasks'})});state.inbox.forEach(i=>{if(`${i.title} ${i.notes}`.toLowerCase().includes(term))out.push({title:i.title,meta:`Inbox · ${i.status}`,view:'home'})});Object.entries(state.quarterPlans).forEach(([k,p])=>p.goals.forEach(g=>{if(`${g.title} ${g.doneWhen}`.toLowerCase().includes(term))out.push({title:g.title||'Quarter goal',meta:`Quarter · ${k}`,view:'quarter'})}));state.whiteboards.forEach(b=>b.nodes.forEach(n=>{if(`${n.title} ${n.text}`.toLowerCase().includes(term))out.push({title:n.title||n.text,meta:`Whiteboard · ${b.name}`,view:'board'})}));return out.slice(0,30)},[q,state])
+  if(!open)return null
+  return <div className="palette-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><section className="search-palette"><header><div><div className="eyebrow">Planner Memory</div><h2>Search SOP</h2></div><button className="icon-button" onClick={onClose}><Icon name="x"/></button></header><div className="search-input"><Icon name="search"/><input autoFocus value={q} onChange={e=>setQ(e.target.value)} placeholder="Search goals, tasks, milestones, notes, AARs…"/></div><div className="search-results">{q&&!results.length?<div className="empty-state">No matching planner records.</div>:results.map((r,i)=><button key={`${r.title}-${i}`} onClick={()=>{if(r.date)mutate('Date selected',r.date,d=>{d.selectedDate=r.date!});navigate(r.view);onClose()}}><strong>{r.title}</strong><small>{r.meta}</small></button>)}</div></section></div>
+}
