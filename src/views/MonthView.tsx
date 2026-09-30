@@ -33,7 +33,7 @@ export function MonthView({ navigate }: { navigate: (view: AppView) => void }) {
       <div className="month-weekday-row"><div>WK</div>{['MON','TUE','WED','THU','FRI','SAT','SUN'].map(x=><div key={x}>{x}</div>)}</div>
       {Array.from({length:6},(_,weekIndex)=>{
         const row=cells.slice(weekIndex*7,weekIndex*7+7)
-        return <div className="month-week-row" key={weekIndex}><button className="week-number" onClick={()=>selectWeek(row[0])}>W{isoWeek(row[0])}</button>{row.map(date=>{const inMonth=monthKey(date)===key;const events=state.events.filter(e=>e.date===date).slice(0,3);return <button className={`month-day ${inMonth?'':'outside'} ${date===state.selectedDate?'selected':''}`} key={date} onClick={()=>selectDay(date)}><span className="date-num">{fromKey(date).getDate()}</span>{events.map(e=><span className={`month-event type-${e.type.toLowerCase().replaceAll(' ','-')}`} key={e.id}>{e.title}</span>)}</button>})}</div>
+        return <div className="month-week-row" key={weekIndex}><button className="week-number" onClick={()=>selectWeek(row[0])}>W{isoWeek(row[0])}</button>{row.map(date=>{const inMonth=monthKey(date)===key;const events=state.events.filter(e=>e.date===date).slice(0,3);return <button className={`month-day ${inMonth?'':'outside'} ${date===state.selectedDate?'selected':''}`} key={date} onClick={()=>selectDay(date)}><span className="date-num">{fromKey(date).getDate()}</span>{events.map(e=><span className={'month-event type-'+e.type.toLowerCase().replaceAll(' ','-')+(e.completed?' completed':'')} key={e.id}>{e.title}</span>)}</button>})}</div>
       })}
     </section>:<section className="panel month-aar">
       <div className="two-col">
