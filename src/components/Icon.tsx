@@ -1,6 +1,6 @@
 import type { ReactNode, SVGProps } from 'react'
 
-export type IconName = 'home' | 'target' | 'calendar' | 'week' | 'day' | 'tasks' | 'board' | 'search' | 'inbox' | 'plus' | 'more' | 'left' | 'right' | 'check' | 'edit' | 'trash' | 'clock' | 'template' | 'settings' | 'export' | 'import' | 'history' | 'save' | 'x' | 'note' | 'text' | 'shape' | 'chart' | 'connect' | 'hand' | 'cursor' | 'group' | 'duplicate' | 'fit' | 'menu' | 'archive'
+export type IconName = 'home' | 'target' | 'calendar' | 'week' | 'day' | 'tasks' | 'board' | 'search' | 'inbox' | 'plus' | 'more' | 'left' | 'right' | 'check' | 'edit' | 'trash' | 'clock' | 'template' | 'settings' | 'export' | 'import' | 'history' | 'save' | 'x' | 'note' | 'text' | 'shape' | 'chart' | 'connect' | 'hand' | 'cursor' | 'group' | 'duplicate' | 'fit' | 'menu' | 'archive' | 'repeat'
 
 const paths: Record<IconName, ReactNode> = {
   home: <><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M9.5 20v-6h5v6"/></>,
@@ -37,7 +37,8 @@ const paths: Record<IconName, ReactNode> = {
   duplicate: <><rect x="7" y="7" width="13" height="13" rx="2"/><path d="M16 7V4H4v12h3"/></>,
   fit: <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/>,
   menu: <path d="M4 6h16M4 12h16M4 18h16"/>,
-  archive: <><path d="M4 7h16v13H4V7ZM3 4h18v3H3V4Z"/><path d="M9 11h6"/></>
+  archive: <><path d="M4 7h16v13H4V7ZM3 4h18v3H3V4Z"/><path d="M9 11h6"/></>,
+  repeat: <><path d="M5 7h12l-2-2M19 17H7l2 2"/><path d="M19 7l2 2-2 2M5 17l-2-2 2-2"/></>
 }
 
 export function Icon({ name, ...props }: { name: IconName } & SVGProps<SVGSVGElement>) {
