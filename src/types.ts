@@ -159,6 +159,24 @@ export interface Whiteboard {
   viewport: { x: number; y: number; scale: number }
 }
 
+export interface RoutineItem {
+  id: string
+  title: string
+  estimateMin: number
+}
+
+export interface Routine {
+  id: string
+  name: string
+  cadence: 'Daily' | 'Weekly' | 'Monthly' | 'Quarterly' | 'Manual'
+  destination: 'inbox' | 'week'
+  domain: string
+  trigger: string
+  items: RoutineItem[]
+  active: boolean
+  createdAt: string
+}
+
 export interface HistoryItem {
   id: string
   at: string
@@ -186,6 +204,9 @@ export interface PlannerState {
   whiteboards: Whiteboard[]
   activeWhiteboardId: string
   history: HistoryItem[]
+  routines: Routine[]
+  routineRuns: Record<string, string>
+  weekTemplate: Partial<WeekPlan> | null
   settings: PlannerSettings
   legacyImportedAt?: string
 }
