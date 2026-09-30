@@ -14,13 +14,13 @@ async function inlineFile(url){
 const cssMatches=[...html.matchAll(/<link\s+rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g)]
 for(const m of cssMatches){
   const css=await inlineFile(m[1])
-  html=html.replace(m[0],'<style>'+css+'</style>')
+  html=html.replace(m[0],()=>'<style>'+css+'</style>')
 }
 
 const jsMatches=[...html.matchAll(/<script\s+type="module"[^>]*src="([^"]+)"[^>]*><\/script>/g)]
 for(const m of jsMatches){
   const js=(await inlineFile(m[1])).replace(/<\/script/gi,'<\\/script')
-  html=html.replace(m[0],'<script type="module">'+js+'</script>')
+  html=html.replace(m[0],()=>'<script type="module">'+js+'</script>')
 }
 
 html=html.replace(/<link\s+rel="manifest"[^>]*>/g,'')
