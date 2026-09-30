@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b --pretty false"
+    "typecheck": "tsc -b --pretty false",
+    "build:standalone": "npm run build && node scripts/make-standalone.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",
