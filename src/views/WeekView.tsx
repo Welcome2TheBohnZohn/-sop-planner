@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { Icon } from '../components/Icon'
 import { QuickAdd } from '../components/QuickAdd'
 import { Modal } from '../components/Modal'
@@ -25,6 +25,13 @@ export function WeekView({ openSchedule }: { openSchedule: (seed: ScheduleSeed) 
   const slotsPerDay=(END_MIN-START_MIN)/interval
   const timedEvents=useMemo(()=>state.events.filter(e=>e.date>=days[0]&&e.date<=days[6]&&!e.allDay&&e.start),[state.events,weekKey])
   const allDayEvents=useMemo(()=>state.events.filter(e=>e.date>=days[0]&&e.date<=days[6]&&e.allDay),[state.events,weekKey])
+  const lastWeekRef=useRef('')
+  useEffect(()=>{
+    if(lastWeekRef.current===weekKey)return
+    lastWeekRef.current=weekKey
+    const hasPlan=Boolean(plan.main||plan.mission||plan.top3.some(Boolean)||plan.supports||plan.constraints||plan.decision||plan.endState||plan.tray.length||timedEvents.length||allDayEvents.length)
+    setTab(hasPlan?'schedule':'mission')
+  },[weekKey,plan.main,plan.mission,plan.supports,plan.constraints,plan.decision,plan.endState,plan.tray.length,timedEvents.length,allDayEvents.length])
 
   function patch(fn:(p:WeekPlan)=>void,action='Week updated',detail=weekKey,allowClosed=false){
     if(plan.closed&&!allowClosed)return
