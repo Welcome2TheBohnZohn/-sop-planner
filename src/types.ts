@@ -79,7 +79,9 @@ export interface WeekPlan {
 export interface DayPlan {
   focus: string
   top3: [string, string, string]
+  top3Done: [boolean, boolean, boolean]
   other: string[]
+  otherDone: boolean[]
   worked: string
   friction: string
   carry: string
