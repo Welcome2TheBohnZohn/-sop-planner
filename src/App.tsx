@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { PlannerProvider, usePlanner } from './state/PlannerContext'
 import type { AppView, ScheduleSeed, TodoItem } from './types'
 import { AppShell } from './components/AppShell'
@@ -22,7 +22,7 @@ function PlannerApp(){
   useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setInboxOpen(false);setScheduleSeed(null)}};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[])
   if(!ready)return <div className="boot-screen"><div className="brand-mark large">SOP<span>›_</span></div><strong>Loading planner…</strong></div>
   function scheduleTodo(todo:TodoItem){setScheduleSeed({date:todo.due||state.selectedDate,time:'09:00',title:todo.title,type:'Task',source:{kind:'todo',id:todo.id}})}
-  let content:React.ReactNode
+  let content:ReactNode
   if(view==='home')content=<HomeView navigate={setView}/>
   else if(view==='quarter')content=<QuarterView/>
   else if(view==='month')content=<MonthView navigate={setView}/>
