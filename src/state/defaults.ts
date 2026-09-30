@@ -92,6 +92,9 @@ export function createInitialState(): PlannerState {
     whiteboards: [initialBoard()],
     activeWhiteboardId: 'BOARD-1',
     history: [],
+    routines: [],
+    routineRuns: {},
+    weekTemplate: null,
     settings: {
       domains: Object.fromEntries(defaultDomains.map(d => [d, true])),
       defaultAvailableHours: 40,
