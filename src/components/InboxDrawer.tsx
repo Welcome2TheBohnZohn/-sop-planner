@@ -1,0 +1,20 @@
+import { useState } from 'react'
+import { Icon } from './Icon'
+import { QuickAdd } from './QuickAdd'
+import { usePlanner } from '../state/PlannerContext'
+import type { ScheduleSeed } from '../types'
+import { startOfWeek } from '../utils/date'
+import { blankWeek } from '../state/defaults'
+
+export function InboxDrawer({open,onClose,openSchedule}:{open:boolean;onClose:()=>void;openSchedule:(seed:ScheduleSeed)=>void}){
+  const {state,mutate,nextId}=usePlanner()
+  const [showDetails,setShowDetails]=useState(false)
+  const [estimate,setEstimate]=useState(30)
+  const [domain,setDomain]=useState('')
+  const [notes,setNotes]=useState('')
+  const active=state.inbox.filter(i=>i.status==='inbox')
+  function capture(title:string){mutate('Inbox item captured',title,d=>d.inbox.unshift({id:nextId('I'),title,estimateMin:estimate,domain,notes,status:'inbox',weekKey:'',eventId:null,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}));setEstimate(30);setDomain('');setNotes('')}
+  function thisWeek(id:string){const item=state.inbox.find(x=>x.id===id);if(!item)return;const wk=startOfWeek(state.selectedDate);mutate('Inbox item committed to week',item.title,d=>{const i=d.inbox.find(x=>x.id===id);if(!i)return;i.status='planned';i.weekKey=wk;i.updatedAt=new Date().toISOString();const w=d.weekPlans[wk]??blankWeek();d.weekPlans[wk]=w;w.tray.push({id:nextId('W'),title:i.title,estimateMin:i.estimateMin,domain:i.domain,inboxId:i.id})})}
+  if(!open)return null
+  return <div className="drawer-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><aside className="inbox-drawer"><header><div><div className="eyebrow">Universal Inbox</div><h2>Capture now. Decide when later.</h2></div><button className="icon-button" onClick={onClose}><Icon name="x"/></button></header><QuickAdd placeholder="What needs your attention?" buttonLabel="Capture" onAdd={capture} autoFocus/><button className="details-toggle" onClick={()=>setShowDetails(v=>!v)}><Icon name="settings"/>Optional details</button>{showDetails&&<div className="inbox-details"><label>Estimate<select value={estimate} onChange={e=>setEstimate(Number(e.target.value))}><option value={15}>15 min</option><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option></select></label><label>Domain<select value={domain} onChange={e=>setDomain(e.target.value)}><option value="">None</option>{Object.entries(state.settings.domains).filter(([,v])=>v).map(([d])=><option key={d}>{d}</option>)}</select></label><label className="full">Notes<textarea rows={3} value={notes} onChange={e=>setNotes(e.target.value)}/></label></div>}<div className="drawer-list-head"><span>{active.length} uncommitted</span><span>{state.inbox.length} total</span></div><div className="drawer-list">{active.length?active.map(i=><div className="inbox-item" key={i.id}><div><strong>{i.title}</strong><small>{i.domain||'No domain'} · {i.estimateMin} min</small>{i.notes&&<p>{i.notes}</p>}</div><div className="row-actions"><button className="button small" onClick={()=>thisWeek(i.id)}>This week</button><button className="icon-button subtle" onClick={()=>openSchedule({date:state.selectedDate,time:'09:00',title:i.title,type:'Task',source:{kind:'inbox',id:i.id}})} aria-label="Schedule"><Icon name="calendar"/></button><button className="icon-button subtle" onClick={()=>mutate('Inbox item archived',i.title,d=>{const x=d.inbox.find(z=>z.id===i.id);if(x){x.status='archived';x.updatedAt=new Date().toISOString()}})} aria-label="Archive"><Icon name="archive"/></button></div></div>):<div className="empty-state">Inbox is clear.</div>}</div></aside></div>
+}
