@@ -10,6 +10,8 @@ type PlannerContextValue = {
   state: PlannerState
   ready: boolean
   saveStatus: SaveStatus
+  canUndo: boolean
+  undo: () => void
   mutate: (action: string, detail: string, fn: (draft: PlannerState) => void) => void
   replaceState: (state: PlannerState) => void
   nextId: (prefix: string) => string
@@ -26,6 +28,8 @@ export function PlannerProvider({ children }: PropsWithChildren) {
   const [ready, setReady] = useState(false)
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('loading')
   const timer = useRef<number | null>(null)
+  const undoStack = useRef<PlannerState[]>([])
+  const [canUndo,setCanUndo] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -50,6 +54,9 @@ export function PlannerProvider({ children }: PropsWithChildren) {
 
   const mutate = useCallback((action: string, detail: string, fn: (draft: PlannerState) => void) => {
     setState(prev => {
+      undoStack.current.push(structuredClone(prev))
+      if(undoStack.current.length>50)undoStack.current.shift()
+      setCanUndo(true)
       const draft = structuredClone(prev)
       fn(draft)
       draft.history.unshift({ id: `H-${Date.now()}-${draft.nextId++}`, at: new Date().toISOString(), action, detail })
@@ -58,7 +65,19 @@ export function PlannerProvider({ children }: PropsWithChildren) {
     })
   }, [])
 
-  const replaceState = useCallback((next: PlannerState) => setState(next), [])
+  const undo = useCallback(() => {
+    const previous=undoStack.current.pop()
+    if(!previous)return
+    previous.history.unshift({id:`H-${Date.now()}-${previous.nextId++}`,at:new Date().toISOString(),action:'Undo',detail:'Reverted the last planner change'})
+    setState(previous)
+    setCanUndo(undoStack.current.length>0)
+  }, [])
+
+  const replaceState = useCallback((next: PlannerState) => {
+    undoStack.current=[]
+    setCanUndo(false)
+    setState(next)
+  }, [])
   const nextId = useCallback((prefix: string) => `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`, [])
 
   const quarter = useCallback((date = state.selectedDate) => state.quarterPlans[quarterKey(date)] ?? blankQuarter(`QG-${quarterKey(date)}`), [state])
@@ -66,7 +85,7 @@ export function PlannerProvider({ children }: PropsWithChildren) {
   const week = useCallback((date = state.selectedDate) => state.weekPlans[startOfWeek(date)] ?? blankWeek(), [state])
   const day = useCallback((date = state.selectedDate) => state.dayPlans[date] ?? blankDay(), [state])
 
-  const value = useMemo(() => ({ state, ready, saveStatus, mutate, replaceState, nextId, quarter, month, week, day }), [state, ready, saveStatus, mutate, replaceState, nextId, quarter, month, week, day])
+  const value = useMemo(() => ({ state, ready, saveStatus, canUndo, undo, mutate, replaceState, nextId, quarter, month, week, day }), [state, ready, saveStatus, canUndo, undo, mutate, replaceState, nextId, quarter, month, week, day])
   return <PlannerContext.Provider value={value}>{children}</PlannerContext.Provider>
 }
 
