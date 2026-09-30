@@ -97,10 +97,11 @@ export function WeekView({ openSchedule }: { openSchedule: (seed: ScheduleSeed) 
     const g=drag.current,rect=canvasRef.current?.getBoundingClientRect();drag.current=null;(e.currentTarget as HTMLElement).style.transform=''
     if(!g||!rect)return
     if(!g.moved){const ev=state.events.find(x=>x.id===g.id);if(ev)openSchedule({eventId:ev.id,date:ev.date,time:ev.start,title:ev.title,type:ev.type,allDay:ev.allDay});return}
-    const x=Math.max(0,Math.min(rect.width-1,e.clientX-rect.left))
-    const y=Math.max(0,Math.min(slotsPerDay*rowH-1,e.clientY-rect.top))
-    const dayIndex=Math.max(0,Math.min(6,Math.floor(x/(rect.width/7))))
-    const snapped=START_MIN+Math.round(y/rowH)*interval
+    const originalDay=Math.max(0,days.indexOf(g.origDate))
+    const dayShift=Math.round((e.clientX-g.startX)/(rect.width/7))
+    const dayIndex=Math.max(0,Math.min(6,originalDay+dayShift))
+    const timeShift=Math.round((e.clientY-g.startY)/rowH)*interval
+    const snapped=g.origStart+timeShift
     const start=Math.max(START_MIN,Math.min(END_MIN-g.duration,snapped)),date=days[dayIndex]
     mutate('Schedule adjusted',`${date} ${toTime(start)}`,d=>{const ev=d.events.find(x=>x.id===g.id);if(!ev)return;ev.moves.push({at:new Date().toISOString(),from:`${ev.date} ${ev.start}`,to:`${date} ${toTime(start)}`});ev.date=date;ev.start=toTime(start);ev.end=toTime(start+g.duration)})
   }
