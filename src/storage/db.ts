@@ -85,7 +85,22 @@ function normalizeNextState(state: PlannerState): PlannerState {
   next.quarterPlans = state.quarterPlans && typeof state.quarterPlans === 'object' ? state.quarterPlans : {}
   next.monthPlans = state.monthPlans && typeof state.monthPlans === 'object' ? state.monthPlans : {}
   next.weekPlans = state.weekPlans && typeof state.weekPlans === 'object' ? state.weekPlans : {}
-  next.dayPlans = state.dayPlans && typeof state.dayPlans === 'object' ? state.dayPlans : {}
+  next.dayPlans = {}
+  if(state.dayPlans && typeof state.dayPlans === 'object'){
+    for(const [key,value] of Object.entries<any>(state.dayPlans)){
+      const base=blankDay()
+      const top3=Array.isArray(value?.top3)?value.top3:[]
+      const other=Array.isArray(value?.other)?value.other:[]
+      next.dayPlans[key]={
+        ...base,
+        ...value,
+        top3:[String(top3[0]||''),String(top3[1]||''),String(top3[2]||'')],
+        top3Done:Array.isArray(value?.top3Done)?[Boolean(value.top3Done[0]),Boolean(value.top3Done[1]),Boolean(value.top3Done[2])]:[false,false,false],
+        other:other.map(String),
+        otherDone:other.map((_:any,i:number)=>Boolean(value?.otherDone?.[i]))
+      }
+    }
+  }
   next.history = Array.isArray(state.history) ? state.history : []
   next.routines = Array.isArray(state.routines) ? state.routines : []
   next.routineRuns = state.routineRuns && typeof state.routineRuns === 'object' ? state.routineRuns : {}
@@ -219,7 +234,9 @@ function migrateLegacy(raw: unknown): PlannerState {
       ...base,
       focus: value.focus || '',
       top3: [openTasks[0] || '', openTasks[1] || '', openTasks[2] || ''],
+      top3Done:[false,false,false],
       other: openTasks.slice(3),
+      otherDone:openTasks.slice(3).map(()=>false),
       worked: value.worked || value.aar || '',
       friction: value.friction || '',
       carry: value.carry || ''
