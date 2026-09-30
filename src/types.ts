@@ -191,6 +191,7 @@ export interface PlannerState {
 }
 
 export interface ScheduleSeed {
+  eventId?: string
   date: string
   time?: string
   title?: string
