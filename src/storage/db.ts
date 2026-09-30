@@ -6,6 +6,7 @@ const DB_NAME = 'sop-planner'
 const STORE = 'kv'
 const STATE_KEY = 'planner-state'
 const LEGACY_KEY = 'sop_planner_v4'
+const FALLBACK_KEY = 'sop_planner_next_fallback'
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -318,7 +319,16 @@ export async function loadPlannerState() {
     const existing = await get<PlannerState>(STATE_KEY)
     if (existing?.schemaVersion === 1) return normalizeNextState(existing)
   } catch {
-    // fall through to legacy/local fallback
+    // fall through to local fallback
+  }
+  try {
+    const rawFallback = localStorage.getItem(FALLBACK_KEY)
+    if(rawFallback){
+      const parsed=JSON.parse(rawFallback) as PlannerState
+      if(parsed?.schemaVersion===1)return normalizeNextState(parsed)
+    }
+  } catch {
+    // continue to legacy migration
   }
   try {
     const raw = localStorage.getItem(LEGACY_KEY)
@@ -339,6 +349,6 @@ export async function savePlannerState(state: PlannerState) {
   try {
     await set(STATE_KEY, state)
   } catch {
-    localStorage.setItem('sop_planner_next_fallback', JSON.stringify(state))
+    localStorage.setItem(FALLBACK_KEY, JSON.stringify(state))
   }
 }
