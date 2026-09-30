@@ -31,12 +31,40 @@ export function QuarterView() {
   function addAction(){if(!editingGoal)return;setEditingGoal({...editingGoal,actions:[...editingGoal.actions,{id:nextId('QA'),title:'',dueDate:'',done:false}]})}
   function openMilestone(goal:Goal,date:string){if(plan.closed)return;setMilestoneDraft({id:nextId('QM'),goalId:goal.id,title:'',date,type:'Milestone'})}
   function saveMilestone(){
-    if(!milestoneDraft?.title.trim())return
-    patch(p=>{
-      const i=p.milestones.findIndex(m=>m.id===milestoneDraft.id)
-      if(i>=0)p.milestones[i]=milestoneDraft
-      else p.milestones.push(milestoneDraft)
-    },'Quarter milestone saved',milestoneDraft.title)
+    if(!milestoneDraft?.title.trim()||plan.closed)return
+    const draft=structuredClone(milestoneDraft)
+    mutate('Quarter milestone saved',draft.title,d=>{
+      const p=d.quarterPlans[key] ?? blankQuarter(`QG-${key}`)
+      d.quarterPlans[key]=p
+      const i=p.milestones.findIndex(m=>m.id===draft.id)
+      if(i>=0)p.milestones[i]=draft
+      else p.milestones.push(draft)
+      const eventId=`QME-${draft.id}`
+      const existing=d.events.find(e=>e.id===eventId)
+      if(existing){
+        if(existing.date!==draft.date)existing.moves.push({at:new Date().toISOString(),from:`${existing.date} all-day`,to:`${draft.date} all-day`})
+        existing.date=draft.date
+        existing.title=draft.title
+        existing.type=draft.type
+        existing.allDay=true
+        existing.start=''
+        existing.end=''
+        existing.goalId=draft.goalId
+        existing.context=`QUARTER_MILESTONE:${key}:${draft.id}`
+      }else{
+        d.events.push({id:eventId,date:draft.date,start:'',end:'',allDay:true,title:draft.title,type:draft.type,completed:false,context:`QUARTER_MILESTONE:${key}:${draft.id}`,domain:'',goalId:draft.goalId,original:{date:draft.date,start:'',end:'',allDay:true},moves:[]})
+      }
+    })
+    setMilestoneDraft(null)
+  }
+  function deleteMilestone(){
+    if(!milestoneDraft||plan.closed)return
+    const id=milestoneDraft.id,title=milestoneDraft.title
+    mutate('Quarter milestone deleted',title,d=>{
+      const p=d.quarterPlans[key]
+      if(p)p.milestones=p.milestones.filter(m=>m.id!==id)
+      d.events=d.events.filter(e=>e.id!==`QME-${id}`)
+    })
     setMilestoneDraft(null)
   }
   function goalSpan(g:Goal){
@@ -74,7 +102,7 @@ export function QuarterView() {
         <div className="action-editor"><div className="section-head compact"><div><div className="eyebrow">Actions</div><h3>What moves this goal?</h3></div><button className="button" type="button" onClick={addAction}><Icon name="plus"/>Action</button></div>{editingGoal.actions.map((a,i)=><div className="goal-action-row" key={a.id}><button className={`check-button ${a.done?'checked':''}`} onClick={()=>{const actions=[...editingGoal.actions];actions[i]={...actions[i],done:!actions[i].done};setEditingGoal({...editingGoal,actions})}}>{a.done&&<Icon name="check"/>}</button><input value={a.title} placeholder="Action" onChange={e=>{const actions=[...editingGoal.actions];actions[i]={...actions[i],title:e.target.value};setEditingGoal({...editingGoal,actions})}}/><input type="date" value={a.dueDate} onChange={e=>{const actions=[...editingGoal.actions];actions[i]={...actions[i],dueDate:e.target.value};setEditingGoal({...editingGoal,actions})}}/><button className="icon-button subtle" onClick={()=>setEditingGoal({...editingGoal,actions:editingGoal.actions.filter((_,x)=>x!==i)})}><Icon name="trash"/></button></div>)}</div>
       </div>}
     </Modal>
-    <Modal open={!!milestoneDraft} title={milestoneDraft?.id && plan.milestones.some(m=>m.id===milestoneDraft.id)?'Edit milestone':'Add milestone'} eyebrow="Quarter map" onClose={()=>setMilestoneDraft(null)} footer={<><button className="button" onClick={()=>setMilestoneDraft(null)}>Cancel</button><button className="button primary" onClick={saveMilestone}><Icon name="target"/>Save to map</button></>}>
+    <Modal open={!!milestoneDraft} title={milestoneDraft?.id && plan.milestones.some(m=>m.id===milestoneDraft.id)?'Edit milestone':'Add milestone'} eyebrow="Quarter map" onClose={()=>setMilestoneDraft(null)} footer={<>{milestoneDraft?.id&&plan.milestones.some(m=>m.id===milestoneDraft.id)&&<><button className="button danger" onClick={deleteMilestone}><Icon name="trash"/>Delete</button><div className="spacer"/></>}<button className="button" onClick={()=>setMilestoneDraft(null)}>Cancel</button><button className="button primary" onClick={saveMilestone}><Icon name="target"/>Save to map</button></>}>
       {milestoneDraft && <div className="form-stack"><label>Milestone / checkpoint<input autoFocus value={milestoneDraft.title} onChange={e=>setMilestoneDraft({...milestoneDraft,title:e.target.value})}/></label><div className="form-grid"><label>Date<input type="date" value={milestoneDraft.date} onChange={e=>setMilestoneDraft({...milestoneDraft,date:e.target.value})}/></label><label>Type<select value={milestoneDraft.type} onChange={e=>setMilestoneDraft({...milestoneDraft,type:e.target.value as QuarterMilestone['type']})}><option>Milestone</option><option>Decision Point</option><option>Deadline</option></select></label></div></div>}
     </Modal>
   </div>
