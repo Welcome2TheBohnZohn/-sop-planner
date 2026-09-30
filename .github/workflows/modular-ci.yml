@@ -28,3 +28,10 @@ jobs:
         run: npm run typecheck
       - name: Build
         run: npm run build
+      - name: Upload preview build
+        uses: actions/upload-artifact@v4
+        with:
+          name: sop-modular-preview
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
