@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Icon, type IconName } from './Icon'
 import { Modal } from './Modal'
 import { usePlanner } from '../state/PlannerContext'
@@ -9,7 +9,7 @@ const NAV:Array<{view:AppView;label:string;icon:IconName}>=[
   {view:'home',label:'Home',icon:'home'},{view:'quarter',label:'Quarter',icon:'target'},{view:'month',label:'Month',icon:'calendar'},{view:'week',label:'Week',icon:'week'},{view:'day',label:'Day',icon:'day'},{view:'tasks',label:'Tasks',icon:'tasks'},{view:'board',label:'Whiteboard',icon:'board'}
 ]
 
-export function AppShell({children,view,navigate,openInbox,openSearch,openSchedule}:{children:React.ReactNode;view:AppView;navigate:(v:AppView)=>void;openInbox:()=>void;openSearch:()=>void;openSchedule:(s:ScheduleSeed)=>void}){
+export function AppShell({children,view,navigate,openInbox,openSearch,openSchedule}:{children:ReactNode;view:AppView;navigate:(v:AppView)=>void;openInbox:()=>void;openSearch:()=>void;openSchedule:(s:ScheduleSeed)=>void}){
   const {state,mutate,replaceState,saveStatus}=usePlanner()
   const [menu,setMenu]=useState(false)
   const [historyOpen,setHistoryOpen]=useState(false)
