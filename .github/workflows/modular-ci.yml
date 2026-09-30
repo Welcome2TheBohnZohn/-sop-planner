@@ -28,6 +28,15 @@ jobs:
         run: npm run typecheck
       - name: Build
         run: npm run build
+      - name: Build standalone preview
+        run: node scripts/make-standalone.mjs
+      - name: Upload standalone preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: sop-modular-standalone
+          path: standalone/SOP_Planner_Modular_Standalone.html
+          if-no-files-found: error
+          retention-days: 7
       - name: Upload preview build
         uses: actions/upload-artifact@v4
         with:
