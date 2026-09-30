@@ -984,6 +984,100 @@ select option:checked{
 }
 </style>
 
+
+<style id="sop-v16-tasking-whiteboard">
+/* TASKING */
+.tasking-shell{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:start}
+.tasking-main,.tasking-side{min-width:0}
+.tasking-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.tasking-capture{display:grid;grid-template-columns:minmax(220px,1fr) 150px 135px auto;gap:8px;align-items:end}
+.tasking-capture .field{padding:0;background:transparent;border:0}
+.tasking-capture input,.tasking-capture select{min-height:40px}
+.todo-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 8px}
+.todo-filter{display:flex;gap:4px;flex-wrap:wrap}
+.todo-list{display:grid;gap:7px}
+.todo-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:10px;align-items:start;padding:11px 12px;border:1px solid var(--line);border-radius:7px;background:rgba(247,245,237,.018);transition:.12s ease}
+.todo-row:hover{border-color:rgba(255,176,0,.26);background:rgba(247,245,237,.026)}
+.todo-row.done{opacity:.6}
+.todo-row.done .todo-title{text-decoration:line-through;color:var(--muted)}
+.todo-check{width:18px;height:18px;margin-top:2px;accent-color:var(--sage)}
+.todo-title{border:0;background:transparent;color:var(--ink);padding:0;text-align:left;font:650 14px/1.35 var(--sans);cursor:pointer}
+.todo-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;font:600 9px/1.3 var(--mono);letter-spacing:.05em;color:var(--muted)}
+.todo-notes-preview{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.45;white-space:pre-wrap}
+.todo-actions{display:flex;gap:5px;align-items:center}
+.todo-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.todo-stat{border:1px solid var(--line);border-radius:7px;padding:12px;background:rgba(247,245,237,.014)}
+.todo-stat span{display:block;font:700 9px var(--mono);letter-spacing:.09em;color:var(--muted)}
+.todo-stat strong{display:block;margin-top:6px;font:700 21px var(--mono);color:var(--ink)}
+.todo-guidance{margin-top:10px;padding:11px;border-left:2px solid rgba(255,176,0,.45);background:rgba(255,176,0,.025);font-size:12px;line-height:1.5;color:var(--muted)}
+.todo-edit-modal{width:min(560px,calc(100% - 28px))}
+
+/* WHITEBOARD */
+.board-shell{display:flex;flex-direction:column;gap:8px;min-height:calc(100vh - 180px)}
+.board-head{display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:10px;align-items:center;padding:9px 10px}
+.board-identity{display:flex;align-items:center;gap:8px;min-width:0}
+.board-identity select{max-width:260px;min-width:150px}
+.board-toolbar{display:flex;gap:5px;align-items:center;overflow-x:auto;padding:2px 0 3px;scrollbar-width:thin}
+.board-toolbar .btn{flex:0 0 auto;white-space:nowrap}
+.board-toolbar .divider{width:1px;height:25px;background:var(--line);margin:0 3px;flex:0 0 auto}
+.board-workspace{position:relative;min-height:680px;height:calc(100vh - 250px);border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:#171b18;box-shadow:inset 0 1px 0 rgba(255,255,255,.015)}
+.board-viewport{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;background-image:linear-gradient(rgba(167,179,157,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(167,179,157,.055) 1px,transparent 1px),linear-gradient(rgba(167,179,157,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(167,179,157,.022) 1px,transparent 1px);background-size:80px 80px,80px 80px,20px 20px,20px 20px}
+.board-viewport.tool-connect{cursor:crosshair}
+.board-viewport.tool-pan{cursor:grab}
+.board-viewport.panning{cursor:grabbing}
+.board-stage{position:absolute;left:0;top:0;width:1px;height:1px;transform-origin:0 0;will-change:transform}
+.board-edges{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+.board-edge{fill:none;stroke:rgba(167,179,157,.55);stroke-width:2;pointer-events:stroke;cursor:pointer}
+.board-edge.selected{stroke:var(--amber);stroke-width:3}
+.board-edge-hit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:pointer}
+.board-edge-label{font:600 10px var(--mono);fill:#d3d5ce;paint-order:stroke;stroke:#171b18;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.board-group{position:absolute;border:1px dashed rgba(167,179,157,.35);border-radius:10px;background:rgba(167,179,157,.018);pointer-events:none}
+.board-group.selected{border-color:rgba(255,176,0,.75);background:rgba(255,176,0,.025)}
+.board-group-label{position:absolute;top:-24px;left:0;padding:4px 7px;border-radius:4px;border:1px solid rgba(167,179,157,.25);background:#1f2420;color:var(--muted);font:700 9px var(--mono);letter-spacing:.07em;pointer-events:auto;cursor:grab;white-space:nowrap}
+.board-node{position:absolute;min-width:100px;min-height:58px;border:1px solid rgba(167,179,157,.28);border-radius:8px;background:#222723;color:var(--ink);box-shadow:0 9px 22px rgba(0,0,0,.2);user-select:none;touch-action:none;overflow:hidden;transition:border-color .1s ease,box-shadow .1s ease}
+.board-node:hover{border-color:rgba(255,176,0,.36)}
+.board-node.selected{border-color:var(--amber);box-shadow:0 0 0 2px rgba(255,176,0,.11),0 12px 28px rgba(0,0,0,.28)}
+.board-node.connect-source{box-shadow:0 0 0 3px rgba(255,176,0,.22),0 12px 28px rgba(0,0,0,.28)}
+.board-node.note{background:#2b2a22;border-color:rgba(255,176,0,.28)}
+.board-node.text{background:transparent;border-color:transparent;box-shadow:none}
+.board-node.text.selected{border-color:rgba(255,176,0,.5);background:rgba(30,35,31,.65)}
+.board-node.shape{background:rgba(167,179,157,.07)}
+.board-node.shape.ellipse{border-radius:999px}
+.board-node.shape.diamond{transform-origin:center}
+.board-node.icon{display:flex;align-items:center;justify-content:center;text-align:center}
+.board-node.chart{background:#202521}
+.board-node-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 9px 5px;cursor:grab}
+.board-node-title{font:700 11px/1.3 var(--mono);letter-spacing:.045em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.board-node-type{color:var(--muted);font:700 8px var(--mono);letter-spacing:.08em}
+.board-node-body{padding:4px 9px 10px;font-size:12px;line-height:1.45;white-space:pre-wrap;overflow:hidden}
+.board-node.text .board-node-body{font-size:16px;font-weight:650;padding:8px}
+.board-icon-glyph{font-size:34px;line-height:1;margin:6px 0 3px;color:var(--amber)}
+.board-icon-label{font:700 10px var(--mono);letter-spacing:.06em;color:var(--ink)}
+.board-resize{position:absolute;width:14px;height:14px;right:1px;bottom:1px;cursor:nwse-resize;opacity:.5}
+.board-resize::before,.board-resize::after{content:"";position:absolute;right:2px;bottom:2px;background:rgba(255,176,0,.65)}
+.board-resize::before{width:8px;height:1px}.board-resize::after{height:8px;width:1px}
+.board-status{position:absolute;left:10px;bottom:10px;display:flex;gap:8px;align-items:center;padding:6px 8px;border:1px solid rgba(167,179,157,.18);border-radius:5px;background:rgba(25,29,26,.9);backdrop-filter:blur(4px);font:600 9px var(--mono);color:var(--muted);z-index:20}
+.board-minimap-note{position:absolute;right:10px;bottom:10px;padding:6px 8px;border-radius:5px;background:rgba(25,29,26,.9);border:1px solid rgba(167,179,157,.18);font:600 9px var(--mono);color:var(--muted);z-index:20}
+.board-chart{padding:3px 8px 9px}
+.chart-bars{display:grid;gap:5px}.chart-bar-row{display:grid;grid-template-columns:55px 1fr 30px;gap:5px;align-items:center;font:600 8px var(--mono);color:var(--muted)}
+.chart-bar-track{height:7px;background:rgba(247,245,237,.06);border-radius:99px;overflow:hidden}.chart-bar-fill{height:100%;background:var(--amber);border-radius:99px}
+.chart-donut{width:64px;height:64px;border-radius:50%;margin:5px auto;position:relative}.chart-donut::after{content:"";position:absolute;inset:12px;border-radius:50%;background:#202521}
+.chart-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;font:700 10px var(--mono);color:var(--ink)}
+.chart-progress{margin-top:8px}.chart-progress-track{height:10px;border-radius:99px;background:rgba(247,245,237,.07);overflow:hidden}.chart-progress-fill{height:100%;background:var(--amber)}
+.board-template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.board-template-card{padding:12px;text-align:left;border:1px solid var(--line);border-radius:8px;background:rgba(247,245,237,.018);color:var(--ink);cursor:pointer}.board-template-card:hover{border-color:rgba(255,176,0,.38);background:rgba(255,176,0,.025)}.board-template-card strong{display:block}.board-template-card span{display:block;margin-top:5px;color:var(--muted);font-size:11px;line-height:1.4}
+.board-inspector-modal{width:min(620px,calc(100% - 28px))}.board-icon-palette{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}.board-icon-choice{height:40px;border:1px solid var(--line);border-radius:5px;background:rgba(247,245,237,.018);color:var(--ink);font-size:20px;cursor:pointer}.board-icon-choice.active,.board-icon-choice:hover{border-color:var(--amber);background:rgba(255,176,0,.05)}
+.board-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}.board-empty-card{max-width:420px;padding:18px;text-align:center;border:1px dashed rgba(167,179,157,.22);border-radius:10px;background:rgba(24,28,25,.6);color:var(--muted)}.board-empty-card strong{display:block;color:var(--ink);margin-bottom:6px;font-size:15px}
+
+/* Quarter goal actions */
+.goal-action-list{display:grid;gap:6px;margin-top:7px}.goal-action-row{display:grid;grid-template-columns:24px minmax(0,1fr) 145px 32px;gap:6px;align-items:center}.goal-action-row input[type="checkbox"]{width:17px;height:17px;accent-color:var(--sage)}.goal-action-row .action-title.done{text-decoration:line-through;color:var(--muted)}.goal-action-add{margin-top:7px}.goal-actions-summary{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.goal-action-chip{font:600 8px var(--mono);padding:3px 5px;border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+.q-goal-bar{cursor:pointer!important}.q-goal-bar:hover{box-shadow:0 0 0 2px rgba(255,176,0,.08)}
+.q-action-dot{position:absolute;top:52px;transform:translateX(-50%);width:16px;height:16px;border-radius:4px;border:1px solid rgba(255,176,0,.55);background:#242820;color:var(--amber);font:700 8px var(--mono);z-index:5;cursor:pointer;padding:0}.q-action-dot.done{border-color:rgba(167,179,157,.45);color:var(--sage)}
+
+@media(max-width:1000px){.tasking-shell{grid-template-columns:1fr}.tasking-side{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tasking-capture{grid-template-columns:1fr 120px 120px auto}.board-head{grid-template-columns:1fr}.board-workspace{height:calc(100vh - 300px);min-height:560px}}
+@media(max-width:700px){.tasking-capture{grid-template-columns:1fr 1fr}.tasking-capture .title-field{grid-column:1/-1}.tasking-capture button{width:100%}.tasking-side{grid-template-columns:1fr}.todo-row{grid-template-columns:24px 1fr}.todo-actions{grid-column:2;justify-content:flex-start}.board-workspace{height:calc(100vh - 330px);min-height:520px}.board-toolbar{margin-left:-2px;margin-right:-2px}.board-template-grid{grid-template-columns:1fr}.goal-action-row{grid-template-columns:22px 1fr 30px}.goal-action-row input[type="date"]{grid-column:2/3}.board-icon-palette{grid-template-columns:repeat(6,1fr)}}
+</style>
+
+<style>.danger-text{color:#d98b7d!important}</style>
 </head>
 <body>
 <div class="app" id="app">
@@ -1003,6 +1097,8 @@ select option:checked{
         <button class="btn" data-view="month">MONTH</button>
         <button class="btn active" data-view="week">WEEK</button>
         <button class="btn" data-view="day">DAY</button>
+        <button class="btn" data-view="tasks">TASKS</button>
+        <button class="btn" data-view="board">WHITEBOARD</button>
       </div>
 
       <div class="header-actions">
@@ -1221,6 +1317,93 @@ select option:checked{
     </div>
   </section>
 
+
+
+  <!-- TASKING -->
+  <section id="tasksView" class="hidden">
+    <div class="panel tasking-head">
+      <div><div class="eyebrow">Tasking / Simple To-Do</div><h2 style="margin:3px 0 0">Small things that simply need to get done.</h2></div>
+      <button class="btn" id="clearCompletedTodos">CLEAR COMPLETED</button>
+    </div>
+    <div class="tasking-shell">
+      <div class="tasking-main">
+        <div class="panel field">
+          <form id="todoQuickForm" class="tasking-capture">
+            <div class="field title-field"><label>Task</label><input id="todoQuickTitle" required placeholder="Reply to John’s email, pick up dry cleaning, call the dentist…"></div>
+            <div class="field"><label>Due</label><input id="todoQuickDue" type="date"></div>
+            <div class="field"><label>Domain</label><select id="todoQuickDomain"></select></div>
+            <button class="btn primary" type="submit">ADD TASK</button>
+          </form>
+          <div class="todo-toolbar"><div class="todo-filter nav"><button class="btn active" data-todo-filter="open">OPEN</button><button class="btn" data-todo-filter="all">ALL</button><button class="btn" data-todo-filter="done">DONE</button><button class="btn" data-todo-filter="today">DUE TODAY</button></div><span id="todoListSummary" class="small muted"></span></div>
+          <div id="todoList" class="todo-list"></div>
+        </div>
+      </div>
+      <aside class="tasking-side">
+        <div class="panel field"><label>Tasking Snapshot</label><div id="todoStats" class="todo-stat-grid"></div><div class="todo-guidance">Use Tasking for lightweight obligations that do not need a time block. If something needs protected time, schedule it from here onto the Day or Week timeline.</div></div>
+        <div class="panel field"><label>Quick Rules</label><div class="small muted" style="line-height:1.6">Keep each item concrete and finishable. Add a due date only when it matters. Cross it off when complete. Use Inbox for things you still need to think through; use Tasking for things you already know you need to do.</div></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- WHITEBOARD -->
+  <section id="boardView" class="hidden">
+    <div class="board-shell">
+      <div class="panel board-head">
+        <div class="board-identity"><div><div class="eyebrow">Planning Whiteboard</div><select id="boardSelect" aria-label="Whiteboard"></select></div><button class="btn" id="newBoardBtn">+ BOARD</button><button class="btn" id="renameBoardBtn">RENAME</button><button class="btn danger" id="deleteBoardBtn">DELETE</button></div>
+        <div class="row" style="justify-content:flex-end"><button class="btn primary" id="boardTemplatesBtn">PLANNING TEMPLATES</button><button class="btn" id="boardFitBtn">FIT</button></div>
+      </div>
+      <div class="board-toolbar" id="boardToolbar">
+        <button class="btn active" data-board-tool="select">SELECT</button><button class="btn" data-board-tool="pan">PAN</button><button class="btn" id="boardMultiBtn">MULTI</button>
+        <span class="divider"></span>
+        <button class="btn" data-board-add="note">+ NOTE</button><button class="btn" data-board-add="text">+ TEXT</button><button class="btn" data-board-add="shape">+ SHAPE</button><button class="btn" data-board-add="icon">+ ICON</button><button class="btn" data-board-add="chart">+ CHART</button>
+        <span class="divider"></span>
+        <button class="btn" data-board-tool="connect">CONNECT</button><button class="btn" id="boardGroupBtn">GROUP</button><button class="btn" id="boardUngroupBtn">UNGROUP</button><button class="btn" id="boardDuplicateBtn">DUPLICATE</button><button class="btn danger" id="boardDeleteBtn">DELETE</button>
+        <span class="divider"></span>
+        <button class="btn" id="boardZoomOut">−</button><button class="btn" id="boardZoomReset">100%</button><button class="btn" id="boardZoomIn">+</button>
+      </div>
+      <div class="board-workspace">
+        <div id="whiteboardViewport" class="board-viewport tool-select">
+          <div id="whiteboardStage" class="board-stage">
+            <svg id="whiteboardEdges" class="board-edges" xmlns="http://www.w3.org/2000/svg"><defs><marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,4 L0,8 z" fill="rgba(167,179,157,.7)"/></marker></defs><g id="whiteboardEdgePaths"></g></svg>
+            <div id="whiteboardGroups"></div>
+            <div id="whiteboardNodes"></div>
+          </div>
+          <div id="boardEmpty" class="board-empty hidden"><div class="board-empty-card"><strong>Blank planning surface</strong>Start with a note, shape, chart, or a planning template. Pan anywhere and zoom as the thinking expands.</div></div>
+          <div id="boardStatus" class="board-status">SELECT · 100%</div>
+          <div class="board-minimap-note">DOUBLE TAP / DOUBLE CLICK TO EDIT · SHIFT OR MULTI FOR GROUP SELECTION</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TASK EDITOR -->
+  <div id="todoEditOverlay" class="overlay hidden">
+    <form id="todoEditForm" class="workspace-modal todo-edit-modal">
+      <div class="between"><div><div class="eyebrow">Tasking</div><h2>Edit To-Do</h2></div><button type="button" class="btn" id="closeTodoEdit">CLOSE</button></div>
+      <input type="hidden" id="todoEditId">
+      <div class="field"><label>Task</label><input id="todoEditTitle" required></div>
+      <div class="two"><div class="field"><label>Due</label><input id="todoEditDue" type="date"></div><div class="field"><label>Domain</label><select id="todoEditDomain"></select></div></div>
+      <div class="field"><label>Notes</label><textarea id="todoEditNotes" rows="6" placeholder="Optional context, phone number, link, reminder, or detail"></textarea></div>
+      <div class="row" style="justify-content:space-between"><button type="button" class="btn danger" id="deleteTodoEdit">DELETE</button><div class="row"><button type="button" class="btn" id="scheduleTodoEdit">SCHEDULE</button><button class="btn primary" type="submit">SAVE TASK</button></div></div>
+    </form>
+  </div>
+
+  <!-- WHITEBOARD TEMPLATE LIBRARY -->
+  <div id="boardTemplateOverlay" class="overlay hidden">
+    <div class="workspace-modal" style="width:min(760px,calc(100% - 28px))">
+      <div class="between"><div><div class="eyebrow">Planning Templates</div><h2>Drop a structure onto the current whiteboard.</h2></div><button class="btn" id="closeBoardTemplates">CLOSE</button></div>
+      <div id="boardTemplateGrid" class="board-template-grid"></div>
+    </div>
+  </div>
+
+  <!-- WHITEBOARD INSPECTOR -->
+  <div id="boardInspectorOverlay" class="overlay hidden">
+    <form id="boardInspectorForm" class="workspace-modal board-inspector-modal">
+      <div class="between"><div><div class="eyebrow" id="boardInspectorEyebrow">Whiteboard Item</div><h2 id="boardInspectorTitle">Edit item</h2></div><button type="button" class="btn" id="closeBoardInspector">CLOSE</button></div>
+      <div id="boardInspectorBody"></div>
+      <div class="row" style="justify-content:flex-end;margin-top:12px"><button type="button" class="btn danger" id="boardInspectorDelete">DELETE</button><button class="btn primary" type="submit">SAVE</button></div>
+    </form>
+  </div>
 
   <!-- DEDICATED SCHEDULE POPUP -->
   <div id="scheduleOverlay" class="overlay hidden">
@@ -3079,6 +3262,274 @@ select option:checked{
     _loadV10();normalize();
     const w=getWeek(realToday);if(dateKey(startWeek(selected))===dateKey(startWeek(realToday)))weekTab=w.planned||w.main?'schedule':'mission';
   };
+
+
+
+
+  /* =========================================================
+     v16 — QUARTER ACTIONS + TASKING + PLANNING WHITEBOARD
+     ========================================================= */
+
+  /* ---------- State migration ---------- */
+  function ensureGoalActions(g){
+    if(!g)return [];
+    if(!Array.isArray(g.actions)){
+      g.actions=[];
+      if(g.nextAction)g.actions.push({id:newRef('A'),title:g.nextAction,done:false,targetDate:''});
+    }
+    g.actions=g.actions.map(a=>typeof a==='string'?{id:newRef('A'),title:a,done:false,targetDate:''}:{id:a.id||newRef('A'),title:a.title||'',done:!!a.done,targetDate:a.targetDate||''});
+    g.nextAction=(g.actions.find(a=>!a.done&&a.title)||g.actions.find(a=>a.title)||{}).title||'';
+    return g.actions;
+  }
+  function makeWhiteboard(name='Brain Dump'){
+    const id=newRef('B');return {id,name,nodes:[],edges:[],groups:[],viewport:{x:0,y:0,scale:1},createdAt:new Date().toISOString()};
+  }
+  const _normalizeV16=normalize;
+  normalize=function(){
+    _normalizeV16();
+    state.version=Math.max(Number(state.version)||12,16);
+    state.todos=Array.isArray(state.todos)?state.todos:[];
+    state.todos=state.todos.map(t=>({id:t.id||newRef('T'),title:t.title||'',done:!!t.done,due:t.due||'',domain:t.domain||'',notes:t.notes||'',createdAt:t.createdAt||new Date().toISOString(),completedAt:t.completedAt||null,scheduledEventId:t.scheduledEventId||null}));
+    state.whiteboards=Array.isArray(state.whiteboards)?state.whiteboards:[];
+    if(!state.whiteboards.length)state.whiteboards.push(makeWhiteboard('Planning Whiteboard'));
+    state.whiteboards.forEach(b=>{b.nodes=Array.isArray(b.nodes)?b.nodes:[];b.edges=Array.isArray(b.edges)?b.edges:[];b.groups=Array.isArray(b.groups)?b.groups:[];b.viewport=b.viewport||{x:0,y:0,scale:1};if(!b.name)b.name='Whiteboard'});
+    if(!state.activeWhiteboardId||!state.whiteboards.some(b=>b.id===state.activeWhiteboardId))state.activeWhiteboardId=state.whiteboards[0].id;
+    Object.values(state.quarterData||{}).forEach(q=>(q.goals||[]).forEach(ensureGoalActions));
+    Object.values(state.monthData||{}).forEach(m=>(m.goals||[]).forEach(ensureGoalActions));
+  };
+
+  /* ---------- Multi-action goals ---------- */
+  function renderGoalActionEditor(draft){
+    const actions=ensureGoalActions(draft);
+    return `<div class="field"><div class="between"><label>Actions</label><span class="small muted">Concrete steps toward this outcome</span></div><div class="goal-action-list">${actions.map((a,i)=>`<div class="goal-action-row" data-goal-action-row="${esc(a.id)}"><input type="checkbox" data-ga-field="done" ${a.done?'checked':''} aria-label="Action complete"><input class="action-title ${a.done?'done':''}" data-ga-field="title" value="${esc(a.title)}" placeholder="Action ${i+1}"><input type="date" data-ga-field="targetDate" value="${esc(a.targetDate||'')}" title="Target date"><button type="button" class="btn danger" data-ga-remove="${esc(a.id)}" aria-label="Remove action">×</button></div>`).join('')}</div><button type="button" class="btn goal-action-add" id="gdAddAction">+ ADD ACTION</button></div>`;
+  }
+  function renderGoalDrawerV16(){
+    if(!goalEdit)return;const d=goalEdit.draft,kind=goalEdit.kind,index=goalEdit.index,period=kind==='quarter'?getQuarter():getMonth();
+    $('#goalDrawerEyebrow').textContent=kind==='quarter'?`Quarter / Primary Goal ${index+1}`:`Month / Outcome ${index+1}`;
+    $('#goalDrawerTitle').textContent=d.title||'Define the goal';
+    const support=kind==='month'?`<div class="field"><label>Supports Quarterly Goal</label><select id="gdSupports">${quarterOptions(d.supports)}</select></div>`:'';
+    const windowFields=kind==='quarter'?`<div class="two"><div class="field"><label>Execution Start</label><input id="gdStart" type="date" value="${esc(d.startDate||'')}"></div><div class="field"><label>Execution End</label><input id="gdEnd" type="date" value="${esc(d.endDate||'')}"></div></div>`:'';
+    $('#goalDrawerBody').innerHTML=`<div class="field"><label>Outcome</label><input id="gdTitle" value="${esc(d.title||'')}" placeholder="Specific result, not an activity"></div><div class="field"><label>Definition of Done</label><textarea id="gdDone" placeholder="What observable condition means this is complete?">${esc(d.doneWhen||'')}</textarea></div><div class="two"><div class="field"><label>Target Date</label><input id="gdTarget" type="date" value="${esc(d.targetDate||'')}"></div><div class="field"><label>Status</label><select id="gdStatus">${statusOptions.map(s=>`<option ${s===d.status?'selected':''}>${s}</option>`).join('')}</select></div></div>${renderGoalActionEditor(d)}<div class="field"><label>Blocked By / Waiting On</label><input id="gdDependency" value="${esc(d.dependency||'')}"></div>${support}${windowFields}`;
+    $('#saveGoalBtn').classList.toggle('hidden',period.closed);$('#goalDrawerBody').querySelectorAll('input,textarea,select,button').forEach(el=>el.disabled=period.closed);
+  }
+  openGoalDrawer=function(kind,index){
+    const period=kind==='quarter'?getQuarter():getMonth(),g=period.goals[index];ensureGoalActions(g);goalEdit={kind,index,draft:clone(g)};ensureGoalActions(goalEdit.draft);renderGoalDrawerV16();$('#goalOverlay').classList.remove('hidden');setTimeout(()=>$('#gdTitle')?.focus(),0);
+  };
+  function harvestGoalDrawerV16(){
+    if(!goalEdit)return;const d=goalEdit.draft;
+    d.title=$('#gdTitle')?.value.trim()||'';d.doneWhen=$('#gdDone')?.value.trim()||'';d.targetDate=$('#gdTarget')?.value||'';d.status=$('#gdStatus')?.value||'Not Started';d.dependency=$('#gdDependency')?.value.trim()||'';
+    $$('#goalDrawerBody [data-goal-action-row]').forEach(row=>{const a=d.actions.find(x=>x.id===row.dataset.goalActionRow);if(!a)return;a.done=!!row.querySelector('[data-ga-field="done"]')?.checked;a.title=row.querySelector('[data-ga-field="title"]')?.value.trim()||'';a.targetDate=row.querySelector('[data-ga-field="targetDate"]')?.value||''});
+    d.actions=d.actions.filter(a=>a.title||a.targetDate);d.nextAction=(d.actions.find(a=>!a.done&&a.title)||d.actions.find(a=>a.title)||{}).title||'';
+    if(goalEdit.kind==='month')d.supports=$('#gdSupports')?.value||'';
+    if(goalEdit.kind==='quarter'){d.startDate=$('#gdStart')?.value||'';d.endDate=$('#gdEnd')?.value||''}
+  }
+  saveGoalDrawer=function(){
+    if(!goalEdit)return;harvestGoalDrawerV16();const {kind,index,draft}=goalEdit,g=kind==='quarter'?getQuarter().goals[index]:getMonth().goals[index];Object.assign(g,clone(draft));ensureGoalActions(g);addHistory('Goal updated',g.title);save(false);$('#goalOverlay').classList.add('hidden');goalEdit=null;render();
+  };
+  $('#saveGoalBtn').onclick=saveGoalDrawer;
+  $('#goalDrawerBody').addEventListener('click',e=>{
+    if(!goalEdit)return;
+    if(e.target.id==='gdAddAction'){harvestGoalDrawerV16();goalEdit.draft.actions.push({id:newRef('A'),title:'',done:false,targetDate:''});renderGoalDrawerV16();const rows=$$('#goalDrawerBody [data-ga-field="title"]');rows[rows.length-1]?.focus();return}
+    const rm=e.target.closest('[data-ga-remove]');if(rm){harvestGoalDrawerV16();goalEdit.draft.actions=goalEdit.draft.actions.filter(a=>a.id!==rm.dataset.gaRemove);renderGoalDrawerV16();return}
+  });
+  $('#goalDrawerBody').addEventListener('change',e=>{if(e.target.matches('[data-ga-field="done"]')){const inp=e.target.closest('[data-goal-action-row]')?.querySelector('[data-ga-field="title"]');inp?.classList.toggle('done',e.target.checked)}});
+
+  renderQuarterGoalSummaries=function(){
+    const q=getQuarter();
+    $('#quarterGoals').innerHTML=q.goals.slice(0,3).map((g,i)=>{const acts=ensureGoalActions(g),open=acts.filter(a=>a.title&&!a.done),done=acts.filter(a=>a.title&&a.done);return `<button class="goal-summary" data-goal-open="quarter:${i}"><div class="goal-summary-top"><div><div class="eyebrow">Primary Goal ${i+1}</div><h3>${esc(g.title||'Define an outcome')}</h3></div><span class="status-chip" data-status="${esc(g.status)}">${esc(g.status)}</span></div><p>${g.doneWhen?`DONE = ${esc(g.doneWhen)}`:'Add a measurable definition of done.'}</p><div class="goal-actions-summary">${open.slice(0,3).map(a=>`<span class="goal-action-chip">□ ${esc(a.title)}</span>`).join('')}${done.length?`<span class="goal-action-chip">✓ ${done.length} complete</span>`:''}${acts.length>3?`<span class="goal-action-chip">+${acts.length-3} more</span>`:''}</div><div class="inbox-meta" style="margin-top:7px">${g.targetDate?`<span>TARGET ${esc(g.targetDate)}</span>`:''}${g.nextAction?`<span>NEXT · ${esc(g.nextAction)}</span>`:''}</div></button>`}).join('');
+  };
+  renderMonthGoalSummaries=function(){
+    const m=getMonth();
+    $('#monthOutcomes').innerHTML=m.goals.slice(0,3).map((g,i)=>{const acts=ensureGoalActions(g);return `<button class="goal-summary" data-goal-open="month:${i}"><div class="goal-summary-top"><div><div class="eyebrow">Monthly Outcome ${i+1}</div><h3>${esc(g.title||'Define an outcome')}</h3></div><span class="status-chip" data-status="${esc(g.status)}">${esc(g.status)}</span></div><p>${g.doneWhen?`DONE = ${esc(g.doneWhen)}`:'Define what complete looks like.'}</p><div class="goal-actions-summary">${acts.filter(a=>a.title&&!a.done).slice(0,2).map(a=>`<span class="goal-action-chip">□ ${esc(a.title)}</span>`).join('')}${acts.filter(a=>a.done).length?`<span class="goal-action-chip">✓ ${acts.filter(a=>a.done).length}</span>`:''}</div><div class="inbox-meta" style="margin-top:7px">${g.targetDate?`<span>TARGET ${esc(g.targetDate)}</span>`:''}${g.nextAction?`<span>NEXT · ${esc(g.nextAction)}</span>`:''}</div></button>`}).join('');
+  };
+
+  const _renderQuarterMapV16=renderQuarterMap;
+  renderQuarterMap=function(){
+    _renderQuarterMapV16();const q=getQuarter(),weeks=quarterWeeks(),qs=weeks[0];
+    q.goals.slice(0,3).forEach((g,gi)=>{ensureGoalActions(g);const lane=$(`#qmap [data-qgoal-lane="${gi}"]`);if(!lane)return;(g.actions||[]).forEach((a,ai)=>{if(!a.targetDate)return;const d=fromKey(a.targetDate),idx=Math.floor((startWeek(d)-qs)/604800000);if(idx<0||idx>12)return;const b=document.createElement('button');b.className=`q-action-dot ${a.done?'done':''}`;b.style.left=`${((idx+.5)/13)*100}%`;b.textContent=a.done?'✓':String(ai+1);b.title=`${a.targetDate} · ${a.title||'Action'}`;b.dataset.goalOpen=`quarter:${gi}`;lane.appendChild(b)})});
+    $$('#qmap [data-qgoal-bar]').forEach(bar=>{bar.setAttribute('title','Open goal details and actions');bar.addEventListener('click',e=>{if(e.target.closest('[data-qresize]'))return;e.stopPropagation();openGoalDrawer('quarter',+bar.dataset.qgoalBar)})});
+  };
+
+  /* ---------- Tasking ---------- */
+  let todoFilter='open';
+  function todoOpenEditor(id){
+    const t=state.todos.find(x=>x.id===id);if(!t)return;$('#todoEditId').value=t.id;$('#todoEditTitle').value=t.title;$('#todoEditDue').value=t.due;$('#todoEditDomain').innerHTML=domainOptions(t.domain);$('#todoEditNotes').value=t.notes||'';$('#todoEditOverlay').classList.remove('hidden');setTimeout(()=>$('#todoEditTitle').focus(),0);
+  }
+  function todoCloseEditor(){$('#todoEditOverlay').classList.add('hidden');$('#todoEditForm').reset()}
+  function todoDueLabel(t){if(!t.due)return '';const today=dateKey(realToday);if(t.due<today&&!t.done)return 'OVERDUE';if(t.due===today)return 'TODAY';return t.due}
+  function renderTasks(){
+    if(!$('#tasksView'))return;$('#todoQuickDomain').innerHTML=domainOptions($('#todoQuickDomain').value||'');
+    const today=dateKey(realToday),all=[...state.todos].sort((a,b)=>(a.done-b.done)||((a.due||'9999').localeCompare(b.due||'9999'))||a.createdAt.localeCompare(b.createdAt));
+    let rows=all;if(todoFilter==='open')rows=all.filter(t=>!t.done);if(todoFilter==='done')rows=all.filter(t=>t.done);if(todoFilter==='today')rows=all.filter(t=>t.due===today&&!t.done);
+    $('#todoList').innerHTML=rows.length?rows.map(t=>`<div class="todo-row ${t.done?'done':''}" data-todo-row="${esc(t.id)}"><input class="todo-check" type="checkbox" data-todo-toggle="${esc(t.id)}" ${t.done?'checked':''}><div><button class="todo-title" data-todo-edit="${esc(t.id)}">${esc(t.title)}</button><div class="todo-meta">${t.domain?`<span>${esc(t.domain.toUpperCase())}</span>`:''}${t.due?`<span class="${t.due<today&&!t.done?'danger-text':''}">${esc(todoDueLabel(t))}</span>`:''}${t.scheduledEventId&&!t.done?`<span>SCHEDULED</span>`:''}${t.done&&t.completedAt?`<span>DONE ${new Date(t.completedAt).toLocaleDateString()}</span>`:''}</div>${t.notes?`<div class="todo-notes-preview">${esc(t.notes)}</div>`:''}</div><div class="todo-actions"><button class="btn" data-todo-schedule="${esc(t.id)}">SCHEDULE</button><button class="btn" data-todo-edit="${esc(t.id)}">EDIT</button><button class="btn danger" data-todo-delete="${esc(t.id)}">×</button></div></div>`).join(''):'<div class="empty">No tasks in this view. Add something small and concrete above.</div>';
+    const open=state.todos.filter(t=>!t.done),done=state.todos.filter(t=>t.done),overdue=open.filter(t=>t.due&&t.due<today),dueToday=open.filter(t=>t.due===today);
+    $('#todoStats').innerHTML=[['OPEN',open.length],['DUE TODAY',dueToday.length],['OVERDUE',overdue.length],['COMPLETE',done.length]].map(([k,v])=>`<div class="todo-stat"><span>${k}</span><strong>${v}</strong></div>`).join('');
+    $('#todoListSummary').textContent=`${open.length} open · ${done.length} complete`;
+    $$('[data-todo-filter]').forEach(b=>b.classList.toggle('active',b.dataset.todoFilter===todoFilter));
+  }
+  $('#todoQuickForm').onsubmit=e=>{e.preventDefault();const title=$('#todoQuickTitle').value.trim();if(!title)return;mutate('To-do added',()=>state.todos.push({id:newRef('T'),title,done:false,due:$('#todoQuickDue').value||'',domain:$('#todoQuickDomain').value||'',notes:'',createdAt:new Date().toISOString(),completedAt:null}),title);$('#todoQuickTitle').value='';$('#todoQuickDue').value='';renderTasks()};
+  $('#todoList').addEventListener('click',e=>{
+    const edit=e.target.closest('[data-todo-edit]');if(edit){todoOpenEditor(edit.dataset.todoEdit);return}
+    const del=e.target.closest('[data-todo-delete]');if(del){const t=state.todos.find(x=>x.id===del.dataset.todoDelete);if(!t)return;openConfirm('Delete this to-do?',t.title,()=>{mutate('To-do deleted',()=>state.todos=state.todos.filter(x=>x.id!==t.id),t.title);renderTasks()});return}
+    const sch=e.target.closest('[data-todo-schedule]');if(sch){const t=state.todos.find(x=>x.id===sch.dataset.todoSchedule);if(t)openSchedulePopup({date:t.due||dateKey(selected),time:'09:00',title:t.title,type:'Task',source:{kind:'todo',todoId:t.id}});return}
+  });
+  $('#todoList').addEventListener('change',e=>{const box=e.target.closest('[data-todo-toggle]');if(!box)return;const t=state.todos.find(x=>x.id===box.dataset.todoToggle);if(!t)return;mutate(box.checked?'To-do completed':'To-do reopened',()=>{t.done=box.checked;t.completedAt=box.checked?new Date().toISOString():null},t.title);renderTasks()});
+  document.addEventListener('click',e=>{const f=e.target.closest('[data-todo-filter]');if(f){todoFilter=f.dataset.todoFilter;renderTasks()}});
+  $('#clearCompletedTodos').onclick=()=>{const n=state.todos.filter(t=>t.done).length;if(!n){showToast('No completed tasks to clear.',false);return}openConfirm('Clear completed to-dos?',`Remove ${n} completed item${n===1?'':'s'} from Tasking history?`,()=>{mutate('Completed to-dos cleared',()=>state.todos=state.todos.filter(t=>!t.done),`${n} items`);renderTasks()})};
+  $('#closeTodoEdit').onclick=todoCloseEditor;$('#todoEditOverlay').addEventListener('click',e=>{if(e.target===$('#todoEditOverlay'))todoCloseEditor()});
+  $('#todoEditForm').onsubmit=e=>{e.preventDefault();const t=state.todos.find(x=>x.id===$('#todoEditId').value);if(!t)return;mutate('To-do updated',()=>{t.title=$('#todoEditTitle').value.trim();t.due=$('#todoEditDue').value;t.domain=$('#todoEditDomain').value;t.notes=$('#todoEditNotes').value.trim()},t.title);todoCloseEditor();renderTasks()};
+  $('#deleteTodoEdit').onclick=()=>{const t=state.todos.find(x=>x.id===$('#todoEditId').value);if(!t)return;todoCloseEditor();openConfirm('Delete this to-do?',t.title,()=>{mutate('To-do deleted',()=>state.todos=state.todos.filter(x=>x.id!==t.id),t.title);renderTasks()})};
+  $('#scheduleTodoEdit').onclick=()=>{const t=state.todos.find(x=>x.id===$('#todoEditId').value);if(!t)return;todoCloseEditor();openSchedulePopup({date:t.due||dateKey(selected),time:'09:00',title:t.title,type:'Task',source:{kind:'todo',todoId:t.id}})};
+
+  /* Schedule source can originate from Tasking too. */
+  const _saveSchedulePopupV16=saveSchedulePopup;
+  saveSchedulePopup=function(e){
+    const todoId=scheduleSource?.kind==='todo'?scheduleSource.todoId:null,beforeIds=new Set(state.events.map(x=>x.id));
+    _saveSchedulePopupV16(e);
+    if(todoId){const t=state.todos.find(x=>x.id===todoId),created=[...state.events].reverse().find(x=>!beforeIds.has(x.id));if(t&&created){t.scheduledEventId=created.id;save(false);renderTasks()}}
+  };
+  $('#scheduleForm').onsubmit=saveSchedulePopup;
+
+  /* ---------- Whiteboard ---------- */
+  let boardTool='select',boardMulti=false,boardSelection=new Set(),boardSelectedEdge=null,boardSelectedGroup=null,boardConnectFrom=null,boardGesture=null,boardPointers=new Map();
+  const boardIcons=['◆','◇','▲','✓','!','★','⚑','⌂','☰','☑','✦','◎','◉','↗','↯','☎','✉','⚙','⏱','$','♥','☀','☁','✚'];
+  function currentBoard(){normalize();return state.whiteboards.find(b=>b.id===state.activeWhiteboardId)||state.whiteboards[0]}
+  function boardNode(id){return currentBoard().nodes.find(n=>n.id===id)}
+  function boardViewportRect(){return $('#whiteboardViewport').getBoundingClientRect()}
+  function boardScreenToWorld(clientX,clientY){const b=currentBoard(),r=boardViewportRect();return {x:(clientX-r.left-b.viewport.x)/b.viewport.scale,y:(clientY-r.top-b.viewport.y)/b.viewport.scale}}
+  function boardCenterWorld(){const r=boardViewportRect();return boardScreenToWorld(r.left+r.width/2,r.top+r.height/2)}
+  function boardDefaultNode(type,x,y){
+    const base={id:newRef('N'),type,x,y,w:220,h:130,title:'',text:'',tone:'default'};
+    if(type==='note')Object.assign(base,{title:'Note',text:'Capture an idea, question, constraint, or observation.'});
+    if(type==='text')Object.assign(base,{title:'',text:'Text',w:200,h:70});
+    if(type==='shape')Object.assign(base,{title:'Concept',text:'',shape:'rect',w:190,h:100});
+    if(type==='icon')Object.assign(base,{title:'Marker',icon:'◆',w:120,h:105});
+    if(type==='chart')Object.assign(base,{title:'Chart',chartType:'bar',chartLabels:['A','B','C'],chartValues:[35,70,50],w:260,h:180});
+    return base;
+  }
+  function boardToneStyle(tone){return tone==='amber'?'border-color:rgba(255,176,0,.55);':tone==='sage'?'border-color:rgba(167,179,157,.65);background:rgba(167,179,157,.09);':tone==='bone'?'background:#eee9dc;color:#282828;border-color:#cfc7b4;':''}
+  function boardChartHTML(n){
+    const vals=(n.chartValues||[]).map(Number),labels=n.chartLabels||[],max=Math.max(1,...vals.map(v=>Math.abs(v)));if(n.chartType==='donut'){const total=Math.max(1,vals.reduce((a,b)=>a+Math.max(0,b),0)),pct=Math.round((Math.max(0,vals[0]||0)/total)*100);return `<div class="board-chart"><div class="chart-donut" style="background:conic-gradient(var(--amber) 0 ${pct}%,rgba(247,245,237,.08) ${pct}% 100%)"><div class="chart-center">${pct}%</div></div><div class="small muted" style="text-align:center">${esc(labels[0]||'Value')}</div></div>`}
+    if(n.chartType==='progress'){const pct=Math.max(0,Math.min(100,Number(vals[0])||0));return `<div class="board-chart"><div class="between"><span class="small muted">${esc(labels[0]||'Progress')}</span><strong>${pct}%</strong></div><div class="chart-progress"><div class="chart-progress-track"><div class="chart-progress-fill" style="width:${pct}%"></div></div></div></div>`}
+    return `<div class="board-chart"><div class="chart-bars">${vals.slice(0,6).map((v,i)=>`<div class="chart-bar-row"><span>${esc(labels[i]||`Item ${i+1}`)}</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.min(100,Math.abs(v)/max*100)}%"></div></div><strong>${esc(v)}</strong></div>`).join('')}</div></div>`;
+  }
+  function boardNodeHTML(n){
+    const sel=boardSelection.has(n.id)?'selected':'',source=boardConnectFrom===n.id?'connect-source':'',shape=n.type==='shape'?(n.shape||'rect'):'';
+    let inner='';
+    if(n.type==='icon')inner=`<div class="board-node-head"><span class="board-node-type">ICON</span></div><div class="board-node-body" style="text-align:center"><div class="board-icon-glyph">${esc(n.icon||'◆')}</div><div class="board-icon-label">${esc(n.title||'Marker')}</div></div>`;
+    else if(n.type==='chart')inner=`<div class="board-node-head"><span class="board-node-title">${esc(n.title||'Chart')}</span><span class="board-node-type">${esc((n.chartType||'bar').toUpperCase())}</span></div>${boardChartHTML(n)}`;
+    else if(n.type==='text')inner=`<div class="board-node-body">${esc(n.text||n.title||'Text')}</div>`;
+    else inner=`<div class="board-node-head"><span class="board-node-title">${esc(n.title||n.type.toUpperCase())}</span><span class="board-node-type">${esc(n.type.toUpperCase())}</span></div><div class="board-node-body">${esc(n.text||'')}</div>`;
+    return `<div class="board-node ${esc(n.type)} ${esc(shape)} ${sel} ${source}" data-board-node="${esc(n.id)}" style="left:${n.x}px;top:${n.y}px;width:${n.w}px;height:${n.h}px;${boardToneStyle(n.tone)}">${inner}<span class="board-resize" data-board-resize="${esc(n.id)}"></span></div>`;
+  }
+  function groupBounds(g){const ns=g.nodeIds.map(boardNode).filter(Boolean);if(!ns.length)return null;const minX=Math.min(...ns.map(n=>n.x))-25,minY=Math.min(...ns.map(n=>n.y))-38,maxX=Math.max(...ns.map(n=>n.x+n.w))+25,maxY=Math.max(...ns.map(n=>n.y+n.h))+25;return {x:minX,y:minY,w:maxX-minX,h:maxY-minY}}
+  function edgePoint(n){return {x:n.x+n.w/2,y:n.y+n.h/2}}
+  function renderBoardEdges(){
+    const b=currentBoard(),svg=$('#whiteboardEdgePaths');if(!svg)return;svg.innerHTML=b.edges.map(ed=>{const a=boardNode(ed.from),z=boardNode(ed.to);if(!a||!z)return '';const p=edgePoint(a),q=edgePoint(z),dx=Math.max(70,Math.abs(q.x-p.x)*.45),path=`M ${p.x} ${p.y} C ${p.x+Math.sign(q.x-p.x||1)*dx} ${p.y}, ${q.x-Math.sign(q.x-p.x||1)*dx} ${q.y}, ${q.x} ${q.y}`,mx=(p.x+q.x)/2,my=(p.y+q.y)/2,sel=boardSelectedEdge===ed.id?'selected':'';return `<path class="board-edge-hit" data-board-edge="${esc(ed.id)}" d="${path}"/><path class="board-edge ${sel}" d="${path}" marker-end="url(#arrowHead)"/>${ed.label?`<text class="board-edge-label" x="${mx}" y="${my-5}" text-anchor="middle">${esc(ed.label)}</text>`:''}`}).join('')
+  }
+  function renderBoardGroups(){const b=currentBoard(),c=$('#whiteboardGroups');if(!c)return;c.innerHTML=b.groups.map(g=>{const r=groupBounds(g);if(!r)return '';return `<div class="board-group ${boardSelectedGroup===g.id?'selected':''}" style="left:${r.x}px;top:${r.y}px;width:${r.w}px;height:${r.h}px"><button class="board-group-label" data-board-group="${esc(g.id)}">${esc(g.title||'GROUP')}</button></div>`}).join('')}
+  function applyBoardTransform(){const b=currentBoard(),stage=$('#whiteboardStage');if(stage)stage.style.transform=`translate(${b.viewport.x}px,${b.viewport.y}px) scale(${b.viewport.scale})`;$('#boardZoomReset').textContent=`${Math.round(b.viewport.scale*100)}%`;$('#boardStatus').textContent=`${boardTool.toUpperCase()}${boardMulti?' · MULTI':''} · ${boardSelection.size} SELECTED · ${Math.round(b.viewport.scale*100)}%`}
+  function renderBoard(){
+    if(!$('#boardView'))return;const b=currentBoard();$('#boardSelect').innerHTML=state.whiteboards.map(x=>`<option value="${esc(x.id)}" ${x.id===b.id?'selected':''}>${esc(x.name)}</option>`).join('');$('#whiteboardNodes').innerHTML=b.nodes.map(boardNodeHTML).join('');renderBoardGroups();renderBoardEdges();applyBoardTransform();$('#boardEmpty').classList.toggle('hidden',b.nodes.length>0);$('#whiteboardViewport').className=`board-viewport tool-${boardTool}`;$$('[data-board-tool]').forEach(x=>x.classList.toggle('active',x.dataset.boardTool===boardTool));$('#boardMultiBtn').classList.toggle('active',boardMulti);bindBoardNodeEvents();
+  }
+  function boardSetTool(tool){boardTool=tool;boardConnectFrom=null;if(tool!=='select')boardMulti=false;renderBoard()}
+  function addBoardNode(type,at=null){const b=currentBoard(),c=at||boardCenterWorld(),n=boardDefaultNode(type,c.x-100,c.y-60);mutate(`${type[0].toUpperCase()+type.slice(1)} added`,()=>b.nodes.push(n),b.name);boardSelection=new Set([n.id]);renderBoard();openBoardInspector('node',n.id)}
+  function boardZoomTo(scale,clientX=null,clientY=null){const b=currentBoard(),old=b.viewport.scale,next=Math.max(.25,Math.min(2.5,scale));if(clientX!=null){const r=boardViewportRect(),wx=(clientX-r.left-b.viewport.x)/old,wy=(clientY-r.top-b.viewport.y)/old;b.viewport.x=clientX-r.left-wx*next;b.viewport.y=clientY-r.top-wy*next}b.viewport.scale=next;save(false);applyBoardTransform()}
+  function boardFit(){const b=currentBoard(),r=boardViewportRect();if(!b.nodes.length){b.viewport={x:r.width/2,y:r.height/2,scale:1};save(false);applyBoardTransform();return}const minX=Math.min(...b.nodes.map(n=>n.x)),minY=Math.min(...b.nodes.map(n=>n.y)),maxX=Math.max(...b.nodes.map(n=>n.x+n.w)),maxY=Math.max(...b.nodes.map(n=>n.y+n.h)),w=Math.max(100,maxX-minX),h=Math.max(100,maxY-minY),scale=Math.max(.25,Math.min(1.6,Math.min((r.width-100)/w,(r.height-100)/h)));b.viewport.scale=scale;b.viewport.x=(r.width-w*scale)/2-minX*scale;b.viewport.y=(r.height-h*scale)/2-minY*scale;save(false);renderBoard()}
+  function bindBoardNodeEvents(){
+    $$('#whiteboardNodes [data-board-node]').forEach(el=>{
+      el.addEventListener('pointerdown',e=>{if(e.target.closest('[data-board-resize]'))return;e.stopPropagation();const id=el.dataset.boardNode;if(boardTool==='connect'){if(!boardConnectFrom){boardConnectFrom=id;boardSelection=new Set([id]);renderBoard()}else if(boardConnectFrom!==id){const b=currentBoard(),from=boardConnectFrom;mutate('Connection added',()=>b.edges.push({id:newRef('E'),from,to:id,label:''}),`${boardNode(from)?.title||'Item'} → ${boardNode(id)?.title||'Item'}`);boardConnectFrom=null;boardSelection=new Set([id]);boardTool='select';renderBoard()}return}if(boardMulti||e.shiftKey){if(boardSelection.has(id))boardSelection.delete(id);else boardSelection.add(id)}else if(!boardSelection.has(id))boardSelection=new Set([id]);boardSelectedEdge=null;boardSelectedGroup=null;undoStack.push(clone(state));if(undoStack.length>20)undoStack.shift();const p=boardScreenToWorld(e.clientX,e.clientY),starts=[...boardSelection].map(sid=>{const n=boardNode(sid);return n?{id:sid,x:n.x,y:n.y}:null}).filter(Boolean);boardGesture={kind:'nodes',pointerId:e.pointerId,start:p,starts,moved:false};el.setPointerCapture?.(e.pointerId);renderBoard()});
+      el.addEventListener('dblclick',e=>{e.stopPropagation();openBoardInspector('node',el.dataset.boardNode)});
+    });
+    $$('#whiteboardNodes [data-board-resize]').forEach(h=>h.addEventListener('pointerdown',e=>{e.stopPropagation();const n=boardNode(h.dataset.boardResize);if(!n)return;undoStack.push(clone(state));if(undoStack.length>20)undoStack.shift();const p=boardScreenToWorld(e.clientX,e.clientY);boardSelection=new Set([n.id]);boardGesture={kind:'resize',pointerId:e.pointerId,start:p,id:n.id,w:n.w,h:n.h};h.setPointerCapture?.(e.pointerId);renderBoard()}));
+    $$('#whiteboardGroups [data-board-group]').forEach(label=>{label.addEventListener('pointerdown',e=>{e.stopPropagation();const g=currentBoard().groups.find(x=>x.id===label.dataset.boardGroup);if(!g)return;boardSelectedGroup=g.id;boardSelection=new Set(g.nodeIds);undoStack.push(clone(state));if(undoStack.length>20)undoStack.shift();const p=boardScreenToWorld(e.clientX,e.clientY),starts=g.nodeIds.map(id=>{const n=boardNode(id);return n?{id,x:n.x,y:n.y}:null}).filter(Boolean);boardGesture={kind:'group',pointerId:e.pointerId,start:p,starts,groupId:g.id};label.setPointerCapture?.(e.pointerId);renderBoard()});label.addEventListener('dblclick',e=>{e.stopPropagation();openBoardInspector('group',label.dataset.boardGroup)})});
+    $$('#whiteboardEdgePaths [data-board-edge]').forEach(path=>path.addEventListener('click',e=>{e.stopPropagation();boardSelectedEdge=path.dataset.boardEdge;boardSelectedGroup=null;boardSelection.clear();renderBoard()}));
+    $$('#whiteboardEdgePaths [data-board-edge]').forEach(path=>path.addEventListener('dblclick',e=>{e.stopPropagation();openBoardInspector('edge',path.dataset.boardEdge)}));
+  }
+  $('#whiteboardViewport').addEventListener('pointerdown',e=>{if(e.target!==$('#whiteboardViewport')&&e.target.id!=='whiteboardStage')return;if(boardTool==='connect'){boardConnectFrom=null;renderBoard();return}if(!boardMulti)boardSelection.clear();boardSelectedEdge=null;boardSelectedGroup=null;const b=currentBoard();boardGesture={kind:'pan',pointerId:e.pointerId,startX:e.clientX,startY:e.clientY,x:b.viewport.x,y:b.viewport.y};$('#whiteboardViewport').classList.add('panning');e.currentTarget.setPointerCapture?.(e.pointerId);renderBoard()});
+  $('#whiteboardViewport').addEventListener('pointermove',e=>{if(!boardGesture||boardGesture.pointerId!==e.pointerId)return;const b=currentBoard();if(boardGesture.kind==='pan'){b.viewport.x=boardGesture.x+(e.clientX-boardGesture.startX);b.viewport.y=boardGesture.y+(e.clientY-boardGesture.startY);applyBoardTransform();return}const p=boardScreenToWorld(e.clientX,e.clientY),dx=p.x-boardGesture.start.x,dy=p.y-boardGesture.start.y;if(boardGesture.kind==='nodes'||boardGesture.kind==='group'){boardGesture.starts.forEach(s=>{const n=boardNode(s.id);if(n){n.x=s.x+dx;n.y=s.y+dy}});boardGesture.moved=true;renderBoardGroups();renderBoardEdges();$$('#whiteboardNodes [data-board-node]').forEach(el=>{const n=boardNode(el.dataset.boardNode);if(n){el.style.left=n.x+'px';el.style.top=n.y+'px'}});return}if(boardGesture.kind==='resize'){const n=boardNode(boardGesture.id);if(n){n.w=Math.max(100,boardGesture.w+dx);n.h=Math.max(58,boardGesture.h+dy);const el=$(`#whiteboardNodes [data-board-node="${n.id}"]`);if(el){el.style.width=n.w+'px';el.style.height=n.h+'px'}renderBoardGroups();renderBoardEdges()}}});
+  function endBoardGesture(e){if(!boardGesture||boardGesture.pointerId!==e.pointerId)return;$('#whiteboardViewport').classList.remove('panning');if(boardGesture.kind!=='pan')addHistory(boardGesture.kind==='resize'?'Whiteboard item resized':'Whiteboard items moved',currentBoard().name);save(false);boardGesture=null;renderBoard()}
+  $('#whiteboardViewport').addEventListener('pointerup',endBoardGesture);$('#whiteboardViewport').addEventListener('pointercancel',endBoardGesture);
+  $('#whiteboardViewport').addEventListener('wheel',e=>{e.preventDefault();const b=currentBoard(),factor=e.deltaY>0?.9:1.1;boardZoomTo(b.viewport.scale*factor,e.clientX,e.clientY)},{passive:false});
+
+  /* Touch pinch zoom. */
+  $('#whiteboardViewport').addEventListener('pointerdown',e=>{boardPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(boardPointers.size===2){const pts=[...boardPointers.values()],b=currentBoard();boardGesture={kind:'pinch',distance:Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y),scale:b.viewport.scale,center:{x:(pts[0].x+pts[1].x)/2,y:(pts[0].y+pts[1].y)/2},pointerId:null}}});
+  $('#whiteboardViewport').addEventListener('pointermove',e=>{if(!boardPointers.has(e.pointerId))return;boardPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(boardPointers.size===2&&boardGesture?.kind==='pinch'){const pts=[...boardPointers.values()],dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);boardZoomTo(boardGesture.scale*(dist/Math.max(1,boardGesture.distance)),boardGesture.center.x,boardGesture.center.y)}});
+  ['pointerup','pointercancel'].forEach(type=>$('#whiteboardViewport').addEventListener(type,e=>boardPointers.delete(e.pointerId)));
+
+  function boardDeleteSelection(){const b=currentBoard();if(boardSelectedEdge){const id=boardSelectedEdge;mutate('Connection deleted',()=>b.edges=b.edges.filter(e=>e.id!==id));boardSelectedEdge=null;renderBoard();return}if(boardSelectedGroup){const gid=boardSelectedGroup;mutate('Group removed',()=>b.groups=b.groups.filter(g=>g.id!==gid));boardSelectedGroup=null;renderBoard();return}if(!boardSelection.size)return;const ids=new Set(boardSelection);mutate('Whiteboard items deleted',()=>{b.nodes=b.nodes.filter(n=>!ids.has(n.id));b.edges=b.edges.filter(e=>!ids.has(e.from)&&!ids.has(e.to));b.groups=b.groups.map(g=>({...g,nodeIds:g.nodeIds.filter(id=>!ids.has(id))})).filter(g=>g.nodeIds.length>1)},`${ids.size} items`);boardSelection.clear();renderBoard()}
+  function boardDuplicate(){const b=currentBoard(),ids=[...boardSelection];if(!ids.length)return;const map=new Map(),copies=[];ids.forEach(id=>{const n=boardNode(id);if(!n)return;const c=clone(n);c.id=newRef('N');c.x+=35;c.y+=35;map.set(id,c.id);copies.push(c)});const edges=b.edges.filter(e=>map.has(e.from)&&map.has(e.to)).map(e=>({id:newRef('E'),from:map.get(e.from),to:map.get(e.to),label:e.label||''}));mutate('Whiteboard items duplicated',()=>{b.nodes.push(...copies);b.edges.push(...edges)},`${copies.length} items`);boardSelection=new Set(copies.map(n=>n.id));renderBoard()}
+  function boardGroupSelection(){const ids=[...boardSelection];if(ids.length<2){showToast('Select at least two items to group.',false);return}const b=currentBoard(),title=`Group ${b.groups.length+1}`;mutate('Whiteboard group created',()=>b.groups.push({id:newRef('G'),title,nodeIds:ids}),title);boardSelectedGroup=b.groups[b.groups.length-1].id;renderBoard()}
+  function boardUngroup(){const b=currentBoard(),groups=boardSelectedGroup?[b.groups.find(g=>g.id===boardSelectedGroup)].filter(Boolean):b.groups.filter(g=>g.nodeIds.some(id=>boardSelection.has(id)));if(!groups.length){showToast('Select a group or an item inside a group.',false);return}const ids=new Set(groups.map(g=>g.id));mutate('Whiteboard group removed',()=>b.groups=b.groups.filter(g=>!ids.has(g.id)),`${groups.length} group${groups.length===1?'':'s'}`);boardSelectedGroup=null;renderBoard()}
+
+  const boardTemplates=[
+    {id:'brainstorm',name:'Brain Dump',desc:'A central question with branches for ideas, constraints, people, evidence and next actions.'},
+    {id:'goal',name:'Goal Decomposition',desc:'Turn one outcome into definition of done, milestones, blockers and concrete actions.'},
+    {id:'decision',name:'Decision Map',desc:'Lay out a decision, options, criteria, risks and the final call.'},
+    {id:'project',name:'Project Planning',desc:'Outcome, workstreams, milestones, risks, resources and next actions.'},
+    {id:'weekly',name:'Weekly Reset',desc:'Main effort, top three, fixed commitments, risks, carry-forward and parking lot.'},
+    {id:'life',name:'Life Areas',desc:'Work, family, health, personal and admin around the current season.'},
+    {id:'swot',name:'SWOT',desc:'Strengths, weaknesses, opportunities and threats in one grouped frame.'}
+  ];
+  function addTemplateNode(b,type,x,y,title,text='',extra={}){const n=Object.assign(boardDefaultNode(type,x,y),{title,text},extra);b.nodes.push(n);return n}
+  function addTemplateEdge(b,a,z,label=''){b.edges.push({id:newRef('E'),from:a.id,to:z.id,label})}
+  function applyBoardTemplate(id){const b=currentBoard(),c=boardCenterWorld(),x=c.x,y=c.y,created=[];undoStack.push(clone(state));if(undoStack.length>20)undoStack.shift();
+    if(id==='brainstorm'){const core=addTemplateNode(b,'note',x-110,y-65,'Core Question','What are we actually trying to understand or solve?',{w:220,h:130,tone:'amber'});created.push(core);[['Ideas',-350,-180],['Constraints',120,-190],['People / Inputs',-380,90],['Evidence',130,80],['Next Actions',-110,240]].forEach(([t,dx,dy])=>{const n=addTemplateNode(b,'note',x+dx,y+dy,t,'');created.push(n);addTemplateEdge(b,core,n)})}
+    if(id==='goal'){const core=addTemplateNode(b,'shape',x-100,y-60,'Outcome','',{tone:'amber',w:200,h:110});created.push(core);const done=addTemplateNode(b,'note',x-390,y-90,'Definition of Done','What observable condition means complete?');const block=addTemplateNode(b,'note',x+210,y-90,'Blockers / Dependencies','What could stop progress?');created.push(done,block);addTemplateEdge(b,core,done);addTemplateEdge(b,core,block);let prev=core;['Milestone 1','Milestone 2','Milestone 3'].forEach((t,i)=>{const n=addTemplateNode(b,'shape',x-260+i*260,y+170,t,'',{w:170,h:90});created.push(n);addTemplateEdge(b,prev,n);prev=n});const act=addTemplateNode(b,'note',x-100,y+340,'Next Actions','List the concrete actions that move the first milestone.');created.push(act);addTemplateEdge(b,prev,act)}
+    if(id==='decision'){const d=addTemplateNode(b,'shape',x-100,y-60,'Decision','',{tone:'amber',w:200,h:100});created.push(d);['Option A','Option B','Option C'].forEach((t,i)=>{const n=addTemplateNode(b,'note',x-410+i*300,y+150,t,'Pros, cons, assumptions');created.push(n);addTemplateEdge(b,d,n)});const cr=addTemplateNode(b,'note',x-390,y-240,'Decision Criteria','What matters most?');const risk=addTemplateNode(b,'note',x+170,y-240,'Risks','What could make this choice fail?');created.push(cr,risk);addTemplateEdge(b,cr,d,'evaluate');addTemplateEdge(b,risk,d,'consider')}
+    if(id==='project'){const o=addTemplateNode(b,'shape',x-100,y-60,'Project Outcome','',{tone:'amber'});created.push(o);[['Workstream 1',-380,130],['Workstream 2',-100,180],['Workstream 3',180,130],['Milestones',-390,-220],['Risks',160,-220],['Next Actions',-100,350]].forEach(([t,dx,dy])=>{const n=addTemplateNode(b,'note',x+dx,y+dy,t,'');created.push(n);addTemplateEdge(b,o,n)})}
+    if(id==='weekly'){const m=addTemplateNode(b,'shape',x-100,y-60,'Main Effort','The one outcome that makes the week successful.',{tone:'amber'});created.push(m);[['Top 3 Priorities',-360,120],['Fixed Commitments',160,120],['Risks / Friction',-360,-210],['Carry Forward',160,-210],['Parking Lot',-100,320]].forEach(([t,dx,dy])=>{const n=addTemplateNode(b,'note',x+dx,y+dy,t,'');created.push(n);addTemplateEdge(b,m,n)})}
+    if(id==='life'){const core=addTemplateNode(b,'note',x-100,y-60,'Current Season','What deserves attention right now?',{tone:'amber'});created.push(core);[['Work',-350,-190],['Family',130,-190],['Health',230,80],['Personal',-100,250],['Admin',-430,80]].forEach(([t,dx,dy])=>{const n=addTemplateNode(b,'note',x+dx,y+dy,t,'What matters here?');created.push(n);addTemplateEdge(b,core,n)})}
+    if(id==='swot'){const ns=[['Strengths',-300,-170],['Weaknesses',40,-170],['Opportunities',-300,70],['Threats',40,70]].map(([t,dx,dy])=>addTemplateNode(b,'note',x+dx,y+dy,t,'',{w:260,h:170}));created.push(...ns);b.groups.push({id:newRef('G'),title:'SWOT',nodeIds:ns.map(n=>n.id)})}
+    addHistory('Whiteboard template added',boardTemplates.find(t=>t.id===id)?.name||id);save(false);boardSelection=new Set(created.map(n=>n.id));$('#boardTemplateOverlay').classList.add('hidden');renderBoard();boardFit();
+  }
+  function renderBoardTemplates(){$('#boardTemplateGrid').innerHTML=boardTemplates.map(t=>`<button class="board-template-card" data-board-template="${t.id}"><strong>${esc(t.name)}</strong><span>${esc(t.desc)}</span></button>`).join('')}
+
+  function openBoardInspector(kind,id){
+    const b=currentBoard();let item=null;if(kind==='node')item=boardNode(id);if(kind==='edge')item=b.edges.find(e=>e.id===id);if(kind==='group')item=b.groups.find(g=>g.id===id);if(!item)return;$('#boardInspectorOverlay').dataset.kind=kind;$('#boardInspectorOverlay').dataset.id=id;$('#boardInspectorEyebrow').textContent=kind==='node'?`Whiteboard / ${item.type}`:kind==='edge'?'Whiteboard / Connection':'Whiteboard / Group';$('#boardInspectorTitle').textContent=kind==='node'?(item.title||item.text||'Edit item'):kind==='edge'?'Edit connection':item.title||'Edit group';
+    if(kind==='edge')$('#boardInspectorBody').innerHTML=`<div class="field"><label>Connection Label</label><input id="biEdgeLabel" value="${esc(item.label||'')}" placeholder="Optional relationship label"></div>`;
+    else if(kind==='group')$('#boardInspectorBody').innerHTML=`<div class="field"><label>Group Name</label><input id="biGroupTitle" value="${esc(item.title||'Group')}"></div><div class="small muted">${item.nodeIds.length} items in this group.</div>`;
+    else{let extra='';if(item.type==='shape')extra=`<div class="field"><label>Shape</label><select id="biShape"><option value="rect" ${item.shape==='rect'?'selected':''}>Rectangle</option><option value="ellipse" ${item.shape==='ellipse'?'selected':''}>Ellipse</option></select></div>`;if(item.type==='icon')extra=`<div class="field"><label>Icon</label><div class="board-icon-palette">${boardIcons.map(ic=>`<button type="button" class="board-icon-choice ${item.icon===ic?'active':''}" data-icon-choice="${esc(ic)}">${esc(ic)}</button>`).join('')}</div><input type="hidden" id="biIcon" value="${esc(item.icon||'◆')}"></div>`;if(item.type==='chart')extra=`<div class="two"><div class="field"><label>Chart Type</label><select id="biChartType"><option value="bar" ${item.chartType==='bar'?'selected':''}>Bar</option><option value="donut" ${item.chartType==='donut'?'selected':''}>Donut</option><option value="progress" ${item.chartType==='progress'?'selected':''}>Progress</option></select></div><div class="field"><label>Values</label><input id="biChartValues" value="${esc((item.chartValues||[]).join(', '))}" placeholder="25, 50, 75"></div></div><div class="field"><label>Labels</label><input id="biChartLabels" value="${esc((item.chartLabels||[]).join(', '))}" placeholder="Research, Draft, Review"></div>`;$('#boardInspectorBody').innerHTML=`${item.type!=='text'?`<div class="field"><label>Title</label><input id="biTitle" value="${esc(item.title||'')}"></div>`:''}<div class="field"><label>${item.type==='text'?'Text':'Notes / Text'}</label><textarea id="biText" rows="5">${esc(item.text||'')}</textarea></div><div class="field"><label>Visual Tone</label><select id="biTone"><option value="default" ${item.tone==='default'?'selected':''}>Neutral</option><option value="amber" ${item.tone==='amber'?'selected':''}>Amber</option><option value="sage" ${item.tone==='sage'?'selected':''}>Sage</option><option value="bone" ${item.tone==='bone'?'selected':''}>Bone</option></select></div>${extra}`}
+    $('#boardInspectorOverlay').classList.remove('hidden');setTimeout(()=>$('#boardInspectorBody input, #boardInspectorBody textarea')?.focus(),0)
+  }
+  function closeBoardInspector(){$('#boardInspectorOverlay').classList.add('hidden');delete $('#boardInspectorOverlay').dataset.kind;delete $('#boardInspectorOverlay').dataset.id}
+  $('#boardInspectorForm').onsubmit=e=>{e.preventDefault();const kind=$('#boardInspectorOverlay').dataset.kind,id=$('#boardInspectorOverlay').dataset.id,b=currentBoard();if(kind==='edge'){const ed=b.edges.find(x=>x.id===id);if(ed)ed.label=$('#biEdgeLabel').value.trim()}else if(kind==='group'){const g=b.groups.find(x=>x.id===id);if(g)g.title=$('#biGroupTitle').value.trim()||'Group'}else{const n=boardNode(id);if(n){if($('#biTitle'))n.title=$('#biTitle').value.trim();n.text=$('#biText')?.value||'';n.tone=$('#biTone')?.value||'default';if(n.type==='shape')n.shape=$('#biShape').value;if(n.type==='icon')n.icon=$('#biIcon').value;if(n.type==='chart'){n.chartType=$('#biChartType').value;n.chartLabels=$('#biChartLabels').value.split(',').map(s=>s.trim()).filter(Boolean);n.chartValues=$('#biChartValues').value.split(',').map(s=>Number(s.trim())).filter(v=>Number.isFinite(v))}}}addHistory('Whiteboard item edited',currentBoard().name);save(false);closeBoardInspector();renderBoard()};
+  $('#boardInspectorBody').addEventListener('click',e=>{const b=e.target.closest('[data-icon-choice]');if(!b)return;$('#biIcon').value=b.dataset.iconChoice;$$('[data-icon-choice]').forEach(x=>x.classList.toggle('active',x===b))});
+  $('#closeBoardInspector').onclick=closeBoardInspector;$('#boardInspectorOverlay').addEventListener('click',e=>{if(e.target===$('#boardInspectorOverlay'))closeBoardInspector()});$('#boardInspectorDelete').onclick=()=>{const kind=$('#boardInspectorOverlay').dataset.kind,id=$('#boardInspectorOverlay').dataset.id;closeBoardInspector();if(kind==='node'){boardSelection=new Set([id]);boardDeleteSelection()}else if(kind==='edge'){boardSelectedEdge=id;boardDeleteSelection()}else{boardSelectedGroup=id;boardDeleteSelection()}};
+
+  $('#boardToolbar').addEventListener('click',e=>{const tool=e.target.closest('[data-board-tool]');if(tool){boardSetTool(tool.dataset.boardTool);return}const add=e.target.closest('[data-board-add]');if(add){addBoardNode(add.dataset.boardAdd);return}});
+  $('#boardMultiBtn').onclick=()=>{boardMulti=!boardMulti;boardTool='select';renderBoard()};$('#boardGroupBtn').onclick=boardGroupSelection;$('#boardUngroupBtn').onclick=boardUngroup;$('#boardDuplicateBtn').onclick=boardDuplicate;$('#boardDeleteBtn').onclick=boardDeleteSelection;$('#boardFitBtn').onclick=boardFit;$('#boardZoomIn').onclick=()=>boardZoomTo(currentBoard().viewport.scale*1.15);$('#boardZoomOut').onclick=()=>boardZoomTo(currentBoard().viewport.scale/1.15);$('#boardZoomReset').onclick=()=>boardZoomTo(1);
+  $('#boardSelect').onchange=e=>{state.activeWhiteboardId=e.target.value;boardSelection.clear();boardSelectedEdge=null;boardSelectedGroup=null;save(false);renderBoard()};
+  $('#newBoardBtn').onclick=()=>{const name=prompt('Name this whiteboard:','New Planning Board');if(name===null)return;const b=makeWhiteboard(name.trim()||'New Planning Board');state.whiteboards.push(b);state.activeWhiteboardId=b.id;addHistory('Whiteboard created',b.name);save(false);boardSelection.clear();renderBoard()};
+  $('#renameBoardBtn').onclick=()=>{const b=currentBoard(),name=prompt('Rename whiteboard:',b.name);if(name===null)return;b.name=name.trim()||b.name;addHistory('Whiteboard renamed',b.name);save(false);renderBoard()};
+  $('#deleteBoardBtn').onclick=()=>{const b=currentBoard();if(state.whiteboards.length===1){showToast('Keep at least one whiteboard.',false);return}openConfirm('Delete this whiteboard?',`Delete “${b.name}” and everything on it?`,()=>{state.whiteboards=state.whiteboards.filter(x=>x.id!==b.id);state.activeWhiteboardId=state.whiteboards[0].id;boardSelection.clear();addHistory('Whiteboard deleted',b.name);save(false);renderBoard()})};
+  $('#boardTemplatesBtn').onclick=()=>{renderBoardTemplates();$('#boardTemplateOverlay').classList.remove('hidden')};$('#closeBoardTemplates').onclick=()=>$('#boardTemplateOverlay').classList.add('hidden');$('#boardTemplateOverlay').addEventListener('click',e=>{if(e.target===$('#boardTemplateOverlay'))$('#boardTemplateOverlay').classList.add('hidden');const t=e.target.closest('[data-board-template]');if(t)applyBoardTemplate(t.dataset.boardTemplate)});
+  document.addEventListener('keydown',e=>{if(view!=='board'||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;if((e.key==='Delete'||e.key==='Backspace')&&(boardSelection.size||boardSelectedEdge||boardSelectedGroup)){e.preventDefault();boardDeleteSelection()}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();boardDuplicate()}},true);
+
+  /* ---------- View integration ---------- */
+  const _periodLabelV16=periodLabel;
+  periodLabel=function(){if(view==='tasks')return 'Tasking · Simple To-Do';if(view==='board')return currentBoard().name;return _periodLabelV16()};
+  const _contextAddLabelV16=contextAddLabel;
+  contextAddLabel=function(){if(view==='tasks')return '+ TASK';if(view==='board')return '+ NOTE';return _contextAddLabelV16()};
+  const _enhancedContextAddV16=enhancedContextAdd;
+  enhancedContextAdd=function(){if(view==='tasks'){$('#todoQuickTitle').focus();return}if(view==='board'){addBoardNode('note');return}_enhancedContextAddV16()};
+  contextAdd=function(){if(view==='tasks'){$('#todoQuickTitle').focus();return}if(view==='board'){addBoardNode('note');return}enhancedContextAdd()};
+  $('#addBtn').onclick=enhancedContextAdd;
+  const _renderHintV16=renderHint;
+  renderHint=function(){if(view==='tasks'){const b=$('#hintBar');b.classList.remove('hidden');$('#hintText').textContent='Tasking is for small, concrete obligations that do not need a time block. Schedule only when the task needs protected time.';$('#hintAction').classList.add('hidden');return}if(view==='board'){const b=$('#hintBar');b.classList.remove('hidden');$('#hintText').textContent='Whiteboard is the unstructured thinking space: map ideas, group themes, draw relationships, and turn the useful pieces into the formal plan.';$('#hintAction').classList.add('hidden');return}_renderHintV16()};
+  const _renderV16=render;
+  render=function(){_renderV16();$('#tasksView').classList.toggle('hidden',view!=='tasks');$('#boardView').classList.toggle('hidden',view!=='board');$('#contextRibbon').classList.toggle('hidden',view==='tasks'||view==='board');if(view==='tasks')renderTasks();if(view==='board')renderBoard();$('#addBtn').textContent=contextAddLabel();};
+
+  /* Search/command extensions. */
+  const _searchableItemsV16=searchableItems;
+  searchableItems=function(){const items=_searchableItemsV16();state.todos.forEach(t=>items.push({title:t.title,meta:`To-do${t.done?' · complete':''}${t.due?` · due ${t.due}`:''}${t.domain?` · ${t.domain}`:''}`,kind:'tasks',todoId:t.id}));state.whiteboards.forEach(b=>{items.push({title:b.name,meta:`Whiteboard · ${b.nodes.length} items`,kind:'board',boardId:b.id});b.nodes.filter(n=>n.title||n.text).forEach(n=>items.push({title:n.title||n.text,meta:`Whiteboard item · ${b.name} · ${n.type}`,kind:'board-node',boardId:b.id,nodeId:n.id}))});return items};
+  const _renderPaletteV16=renderPalette;
+  renderPalette=function(){_renderPaletteV16();if($('#paletteOverlay').dataset.mode==='history')return;const list=$('#paletteList'),results=list._results||[];if(!results.some(r=>r.cmd==='tasks')){const q=$('#paletteInput').value.toLowerCase().trim(),extra=[{title:'Open Tasking',meta:'Command',cmd:'tasks'},{title:'Open Whiteboard',meta:'Command',cmd:'board'}].filter(i=>!q||(`${i.title} ${i.meta}`).toLowerCase().includes(q));list._results=[...extra,...results];list.innerHTML=[...extra.map((r,i)=>`<button class="palette-item" data-pal-index="${i}"><strong>${esc(r.title)}</strong><small>${esc(r.meta)}</small></button>`),...results.map((r,i)=>`<button class="palette-item" data-pal-index="${i+extra.length}"><strong>${esc(r.title)}</strong><small>${esc(r.meta)}</small></button>`)].join('')}};
+  document.addEventListener('click',e=>{const pi=e.target.closest('[data-pal-index]');if(!pi)return;const r=$('#paletteList')._results?.[+pi.dataset.palIndex];if(!r)return;if(r.cmd==='tasks'||r.cmd==='board'){e.stopImmediatePropagation();$('#paletteOverlay').classList.add('hidden');view=r.cmd;render();return}if(r.kind==='tasks'){e.stopImmediatePropagation();$('#paletteOverlay').classList.add('hidden');view='tasks';render();todoOpenEditor(r.todoId);return}if(r.kind==='board'||r.kind==='board-node'){e.stopImmediatePropagation();$('#paletteOverlay').classList.add('hidden');state.activeWhiteboardId=r.boardId;view='board';render();if(r.nodeId){boardSelection=new Set([r.nodeId]);renderBoard();openBoardInspector('node',r.nodeId)}return}},true);
+
+  /* Unified surface close extensions. */
+  const _closeTopSurfaceV16=closeTopSurface;
+  closeTopSurface=function(){if(!$('#boardInspectorOverlay').classList.contains('hidden')){closeBoardInspector();return true}if(!$('#boardTemplateOverlay').classList.contains('hidden')){$('#boardTemplateOverlay').classList.add('hidden');return true}if(!$('#todoEditOverlay').classList.contains('hidden')){todoCloseEditor();return true}return _closeTopSurfaceV16()};
 
 
   load();runDueSops();render();
