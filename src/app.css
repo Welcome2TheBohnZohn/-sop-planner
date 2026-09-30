@@ -70,3 +70,16 @@ svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 }
 .tray-task-copy:hover strong{color:var(--amber)}
 .menu-popover button:disabled{opacity:.35;cursor:not-allowed}
+
+
+/* Day task lifecycle */
+.paper-task-line.top3-line{grid-template-columns:28px 30px 1fr}
+.paper-task-line.other-line{grid-template-columns:28px 1fr 28px}
+.paper-task-line.done input{text-decoration:line-through;opacity:.55}
+.mini-check.checked{background:rgba(167,179,157,.18);border-color:rgba(90,105,88,.48)}
+.mini-delete{
+  width:26px;height:26px;border:0;border-radius:6px;background:transparent;color:#9e958e;
+  display:grid;place-items:center;padding:0;opacity:.55
+}
+.mini-delete:hover{opacity:1;color:#a94f41;background:rgba(169,79,65,.08)}
+.mini-delete svg{width:14px;height:14px}
