@@ -19,13 +19,17 @@ export function QuarterView() {
   const weeks = quarterWeeks(state.selectedDate)
   const weekStart = startOfWeek(weeks[0])
 
-  function patch(fn:(p:typeof plan)=>void, action='Quarter updated', detail=key){
+  function patch(fn:(p:typeof plan)=>void, action='Quarter updated', detail=key, allowClosed=false){
+    if(plan.closed&&!allowClosed)return
     mutate(action,detail,d=>{const p=d.quarterPlans[key] ?? blankQuarter(`QG-${key}`);d.quarterPlans[key]=p;fn(p)})
   }
-  function editGoal(i:number){setGoalIndex(i);setEditingGoal(structuredClone(plan.goals[i]))}
+  function toggleClosed(){
+    patch(p=>{p.closed=!p.closed},plan.closed?'Quarter reopened':'Quarter closed',key,true)
+  }
+  function editGoal(i:number){if(plan.closed)return;setGoalIndex(i);setEditingGoal(structuredClone(plan.goals[i]))}
   function saveGoal(){if(!editingGoal||goalIndex<0)return;patch(p=>{p.goals[goalIndex]=editingGoal},'Quarter goal saved',editingGoal.title);setEditingGoal(null)}
   function addAction(){if(!editingGoal)return;setEditingGoal({...editingGoal,actions:[...editingGoal.actions,{id:nextId('QA'),title:'',dueDate:'',done:false}]})}
-  function openMilestone(goal:Goal,date:string){setMilestoneDraft({id:nextId('QM'),goalId:goal.id,title:'',date,type:'Milestone'})}
+  function openMilestone(goal:Goal,date:string){if(plan.closed)return;setMilestoneDraft({id:nextId('QM'),goalId:goal.id,title:'',date,type:'Milestone'})}
   function saveMilestone(){
     if(!milestoneDraft?.title.trim())return
     patch(p=>{
@@ -44,8 +48,8 @@ export function QuarterView() {
   }
   const quarterLabel = useMemo(()=>key.replace('-',' · '),[key])
   return <div className="view-stack">
-    <section className="view-title quarter-heading"><div><div className="eyebrow">Quarter · Strategic Map</div><h1>{quarterLabel}</h1><p>Where are we going, and what proves progress?</p></div><div className="segmented"><button className={tab==='map'?'active':''} onClick={()=>setTab('map')}><Icon name="target"/>Map</button><button className={tab==='plan'?'active':''} onClick={()=>setTab('plan')}><Icon name="tasks"/>Plan</button><button className={tab==='aar'?'active':''} onClick={()=>setTab('aar')}><Icon name="history"/>AAR</button></div></section>
-    <section className="panel mission-strip"><label><span>Quarter mission</span><input value={plan.mission} onChange={e=>patch(p=>{p.mission=e.target.value})} placeholder="What needs to be true at the end of this quarter?"/></label></section>
+    <section className="view-title quarter-heading"><div><div className="eyebrow">Quarter · Strategic Map</div><h1>{quarterLabel}</h1><p>Where are we going, and what proves progress?</p></div><div className="title-actions"><div className="segmented"><button className={tab==='map'?'active':''} onClick={()=>setTab('map')}><Icon name="target"/>Map</button><button className={tab==='plan'?'active':''} onClick={()=>setTab('plan')}><Icon name="tasks"/>Plan</button><button className={tab==='aar'?'active':''} onClick={()=>setTab('aar')}><Icon name="history"/>AAR</button></div><button className="button" onClick={toggleClosed}>{plan.closed?'Reopen':'Close Quarter'}</button></div></section>{plan.closed&&<div className="closed-banner"><strong>QUARTER CLOSED</strong><span>This period is preserved as a historical record. Reopen it to make changes.</span></div>}
+    <section className="panel mission-strip"><label><span>Quarter mission</span><input disabled={plan.closed} value={plan.mission} onChange={e=>patch(p=>{p.mission=e.target.value})} placeholder="What needs to be true at the end of this quarter?"/></label></section>
     {tab==='map' && <section className="panel quarter-map-panel">
       <div className="quarter-weeks-head"><div className="goal-label-col">PRIMARY GOALS</div><div className="quarter-week-grid">{weeks.map((w,i)=><div key={w}><strong>W{i+1}</strong><small>{formatDay(w,{month:'short',day:'numeric'})}</small></div>)}</div></div>
       {plan.goals.map((g,gi)=><div className="quarter-lane-row" key={g.id}>
@@ -59,7 +63,7 @@ export function QuarterView() {
       <div className="map-legend"><span>◆ Milestone</span><span>◇ Decision Point</span><span>▲ Deadline</span><span>Click any week lane to add</span></div>
     </section>}
     {tab==='plan' && <div className="goal-plan-grid">{plan.goals.map((g,i)=><button className="goal-plan-card" key={g.id} onClick={()=>editGoal(i)}><div className="goal-card-top"><span className="goal-number">0{i+1}</span><span className={`status-pill ${g.status.toLowerCase().replace(' ','-')}`}>{g.status}</span></div><h2>{g.title||`Primary Goal ${i+1}`}</h2><p>{g.doneWhen||'Define what done looks like.'}</p><div className="goal-card-meta"><span>{g.targetDate?`Target ${g.targetDate}`:'No target date'}</span><span>{g.actions.filter(a=>!a.done).length} open actions</span></div></button>)}</div>}
-    {tab==='aar' && <section className="panel aar-panel"><div className="section-head"><div><div className="eyebrow">Quarter AAR</div><h2>What changed because of this quarter?</h2></div></div><textarea rows={12} value={plan.aar} onChange={e=>patch(p=>{p.aar=e.target.value})} placeholder="Outcomes, misses, lessons, decisions, what carries forward…"/></section>}
+    {tab==='aar' && <section className="panel aar-panel"><div className="section-head"><div><div className="eyebrow">Quarter AAR</div><h2>What changed because of this quarter?</h2></div></div><textarea disabled={plan.closed} rows={12} value={plan.aar} onChange={e=>patch(p=>{p.aar=e.target.value})} placeholder="Outcomes, misses, lessons, decisions, what carries forward…"/></section>}
 
     <Modal open={!!editingGoal} title="Quarter goal" eyebrow={`Primary Goal ${goalIndex+1}`} onClose={()=>setEditingGoal(null)} footer={<><button className="button" onClick={()=>setEditingGoal(null)}>Cancel</button><button className="button primary" onClick={saveGoal}><Icon name="save"/>Save goal</button></>}>
       {editingGoal && <div className="form-stack">
